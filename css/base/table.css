@@ -1,0 +1,29 @@
+.table {
+  max-height: 420px;
+  overflow-y: scroll;
+  position: relative;
+}
+table {
+  border-collapse: collapse;
+  width: calc(100% - 16px);
+  box-sizing: border-box;
+  margin: 0 8px;
+}
+th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+tr:hover,
+tr:nth-child(even):hover {
+  background-color: #ebf4ff;
+}
+td,
+th {
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even) {
+  background-color: #e5e5e5;
+}

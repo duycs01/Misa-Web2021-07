@@ -1,0 +1,79 @@
+.combo-box {
+  height: 100%;
+  position: relative;
+  width: 300px;
+}
+.combo-box .select {
+  width: 300px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.combo-box .select .text {
+  width: 100%;
+  height: 90%;
+  border: 1px solid #bbbbbb;
+  font-weight: normal;
+  color: #000000;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: #fff;
+  outline: none;
+  box-sizing: content-box;
+}
+.combo-box .select .text:focus {
+  border-color: #019160;
+}
+.combo-box .select .text:focus + .icon {
+  background: #019160;
+  color: #fff;
+}
+.combo-box .select .icon {
+  background: #bbbbbb;
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 16px;
+  border-end-end-radius: 4px;
+  z-index: 20;
+}
+.combo-box .select:focus > .icon i {
+  transform: rotate(180deg);
+}
+.combo-box .select:focus + .option {
+  display: block;
+}
+.combo-box .option {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  padding: 4px 0;
+  z-index: 50;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.combo-box .option-item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.combo-box .option-item .icon {
+  padding: 0 10px;
+  color: transparent;
+}
+.combo-box .option-item:hover {
+  background: #e9ebee;
+}
+.combo-box .option-item:active,
+.combo-box .option-item:focus {
+  background: #019160;
+  color: #fff;
+}
+.combo-box .option-item:active .icon,
+.combo-box .option-item:focus .icon {
+  color: #fff;
+}
