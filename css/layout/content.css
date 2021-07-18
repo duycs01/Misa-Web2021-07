@@ -1,0 +1,49 @@
+.content {
+  position: absolute;
+  top: 49px;
+  left: 226px;
+  border-top: 1px solid #ccc;
+  width: calc(100% - 226px);
+}
+.content .title {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 12px;
+}
+.content .title .name-table {
+  margin-top: 20px;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.content .title .btn-add {
+  margin-top: 20px;
+  margin-bottom: 4px;
+}
+.content .control {
+  display: flex;
+  align-items: center;
+  margin: 0 10px 12px;
+}
+.content .control .search {
+  margin-right: 10px;
+  width: 320px;
+}
+.content .control .filter-department {
+  width: 180px;
+  margin-right: 12px;
+}
+.content .control .filter-employeePositon {
+  width: 180px;
+}
+.content .refresh {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
