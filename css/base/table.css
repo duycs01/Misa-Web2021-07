@@ -14,16 +14,19 @@ th {
   top: 0;
   background: #fff;
 }
-tr:hover,
-tr:nth-child(even):hover {
+tr:hover {
+  background-color: #e5e5e5;
+}
+
+tr:active,
+tr:focus {
   background-color: #ebf4ff;
+}
+th {
+  text-align: left;
 }
 td,
 th {
   border-bottom: 1px solid #ccc;
-  text-align: left;
   padding: 8px;
-}
-tr:nth-child(even) {
-  background-color: #e5e5e5;
 }

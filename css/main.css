@@ -5,6 +5,7 @@
 @import url("base/button-icon.css");
 @import url("base/table.css");
 @import url("base/combo-box.css");
+@import url("commom/common.css");
 
 @import url("layout/pagination.css");
 @import url("layout/header.css");

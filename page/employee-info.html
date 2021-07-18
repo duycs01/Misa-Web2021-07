@@ -16,7 +16,7 @@
     <div class="combo-box">
       <div class="select">
         <input type="text" class="text" />
-        <span class="icon"><i class="fas fa-chevron-down"></i></span>
+        <button class="icon"><i class="fas fa-chevron-down"></i></button>
       </div>
       <div class="option">
         <div class="option-item">
@@ -29,6 +29,43 @@
           <span class="icon"> <i class="fas fa-check"></i></span>Tất cả vị trí
         </div>
       </div>
+    </div>
+
+    <div class="dropdown">
+      <button class="select">
+        <span class="text">Tất cả vị trí</span>
+        <span class="icon"><i class="fas fa-chevron-down"></i></span>
+      </button>
+      <div class="option">
+        <div class="option-item">
+          <span class="icon"> <i class="fas fa-check"></i></span>Vị trí 1
+        </div>
+        <div class="option-item">
+          <span class="icon"> <i class="fas fa-check"></i></span>Vị trí 2
+        </div>
+        <div class="option-item" active>
+          <span class="icon"> <i class="fas fa-check"></i></span>Tất cả vị trí
+        </div>
+      </div>
+    </div>
+
+    <div class="search input-icon">
+      <label for="search" class="icon">
+        <img src="/content/icon/search.png" alt="search" />
+      </label>
+      <input
+        id="search"
+        type="search"
+        class="input"
+        placeholder="Tìm kiếm theo mã, tên hoặc số điện thoại"
+      />
+
+      <button type="button" class="button-icon btn-add">
+        <span class="icon-left">
+          <img src="/content/icon/add.png" alt="add" />
+        </span>
+        <span type="button" class="text">Thêm nhân viên</span>
+      </button>
     </div>
   </body>
 </html>
