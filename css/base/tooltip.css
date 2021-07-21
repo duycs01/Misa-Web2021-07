@@ -1,0 +1,29 @@
+.tooltip {
+  position: relative;
+}
+.tooltip:after {
+  position: absolute;
+  background: #f65454;
+  border-radius: 4px;
+  color: #fff;
+  content: "Trường này không được để trống";
+  padding: 10px;
+  width: 150px;
+  left: 30%;
+  top: -37px;
+  text-align: center;
+  opacity: 90%;
+}
+.tooltip:before {
+  border: solid;
+  border-color: #f65454 transparent;
+  border-width: 10px 6px 0 6px;
+  content: "";
+  left: 50%;
+  bottom: -10px;
+  position: absolute;
+  opacity: 90%;
+}
+.border-red {
+  border-color: #f65454 !important;
+}

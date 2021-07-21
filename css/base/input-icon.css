@@ -1,0 +1,35 @@
+.input-icon {
+  border: 1px solid #dbdeff;
+  border-radius: 5px;
+  height: 40px;
+  font-size: 12px;
+  color: #bbbbbb;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.input-icon .input {
+  position: absolute;
+  border: none;
+  height: 100%;
+  width: 100%;
+  padding-left: 40px;
+  outline: none;
+  border-radius: 5px;
+}
+.input-icon .input:focus {
+  border: 1px solid #01b075;
+  color: #000000;
+  font-style: normal;
+}
+.input-icon .input:focus::placeholder {
+  color: transparent;
+}
+.input-icon .icon {
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  padding-left: 16px;
+  padding-right: 8px;
+}

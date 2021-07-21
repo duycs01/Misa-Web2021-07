@@ -1,0 +1,22 @@
+.text-center {
+  text-align: center !important;
+}
+.text-right {
+  text-align: right !important;
+}
+.text-left {
+  text-align: left !important;
+}
+.active {
+  background: #019160 !important;
+  color: #fff;
+}
+.active i {
+  color: #fff;
+}
+.block {
+  display: block !important;
+}
+.hidden {
+  display: none !important;
+}
