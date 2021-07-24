@@ -4,12 +4,17 @@
  * @param {idShow} idShow Id modal hiển thị
  * Create by: nvduy(20/7/2021)
  */
-function showModal(idSelector, idShow) {
+function ShowHideModal(idSelector, idShow) {
   idSelector.onclick = function () {
     idShow.classList.toggle("block");
     $("#btn-save").setAttribute("control", "add");
     resetData();
     getNewEmployeeCode();
+    let check = true;
+    for (let i = 0; i < $("input[required]").length; i++) {
+      let input = $("input[required]")[i];
+      check = alertInput(input, check);
+    }
   };
 }
 

@@ -14,7 +14,7 @@
 
     <title>Phần mêm quản lí nhà hàng CukCuk.vn</title>
   </head>
-  <body onload="init()">
+  <body>
     <div class="header">
       <div class="header-left">
         <div class="toggle" id="toggle">
@@ -106,22 +106,29 @@
             type="search"
             class="input"
             placeholder="Tìm kiếm theo mã, tên hoặc số điện thoại"
+            tabindex="0"
           />
         </div>
         <div class="filter-department">
           <div class="combo-box">
-            <div class="select" id="select-department">
+            <div
+              class="select"
+              id="select-department"
+              prop-id="DepartmentId"
+              prop-name="DepartmentName"
+            >
               <input
                 type="text"
                 class="text"
                 value="Tất cả phòng ban"
                 readonly
+                tabindex="2"
               />
               <!-- <span class="text">Tất cả phòng ban</span> -->
               <span class="icon"><i class="fas fa-chevron-down"></i></span>
             </div>
             <div class="option" id="option-department">
-              <div class="option-item active" value="null">
+              <div class="option-item active" value="null" tabindex="2">
                 <span class="icon"><i class="fas fa-check"></i></span>
                 <span class="text">Tất cả phòng ban</span>
               </div>
@@ -130,12 +137,18 @@
         </div>
         <div class="filter-employeePositon">
           <div class="dropdown">
-            <div class="select" id="select-employeePositon">
+            <div
+              class="select"
+              id="select-employeePositon"
+              prop-id="PositionId"
+              prop-name="PositionName"
+              tabindex="1"
+            >
               <span class="text">Tất cả vị trí</span>
               <span class="icon"><i class="fas fa-chevron-down"></i></span>
             </div>
             <div class="option" id="option-employeePositon">
-              <div class="option-item active" value="null">
+              <div class="option-item active" value="null" tabindex="1">
                 <span class="icon"> <i class="fas fa-check"></i></span>Tất cả vị
                 trí
               </div>
@@ -147,20 +160,20 @@
         </button>
       </div>
       <div class="table">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Mã nhân viên</th>
-              <th>Họ và tên</th>
-              <th class="text-center">Giới tính</th>
-              <th class="text-center">Ngày sinh</th>
-              <th class="text-center">Điện thoại</th>
-              <th>Email</th>
-              <th>Chức vụ</th>
-              <th>Phòng ban</th>
-              <th>Mức lương cơ bản</th>
-              <th>Tình trạng công việc</th>
+        <table id="table-employee">
+          <thead id="table-title">
+            <tr prop-id="EmployeeId">
+              <!-- <th prop-name="EmployeeId">#</th> -->
+              <th prop-name="EmployeeCode">Mã nhân viên</th>
+              <th prop-name="FullName">Họ và tên</th>
+              <th class="text-center" prop-name="Gender">Giới tính</th>
+              <th class="text-center" prop-name="DateOfBirth">Ngày sinh</th>
+              <th class="text-center" prop-name="PhoneNumber">Điện thoại</th>
+              <th prop-name="Email">Email</th>
+              <th prop-name="DepartmentName">Chức vụ</th>
+              <th prop-name="PositionName">Phòng ban</th>
+              <th prop-name="Salary">Mức lương cơ bản</th>
+              <th prop-name="WorkStatus">Tình trạng công việc</th>
             </tr>
           </thead>
           <tbody id="table-body"></tbody>
@@ -194,7 +207,7 @@
         <div class="per-page">10 nhân viên/trang</div>
       </div>
     </div>
-    <div class="modal" id="modal-info">
+    <div class="modal" id="modal-employee">
       <div class="modal-content" id="modal-content">
         <button type="button" id="btn-close" class="btn-icon button">
           <i class="fas fa-times"></i>
@@ -203,9 +216,9 @@
           <div class="form-title">Thông tin nhân viên</div>
           <div class="form-content">
             <div class="avatar-employee">
-              <div class="avatar">
+              <div class="avatar" id="avatar">
                 <img src="/content/img/default-avatar.jpg" alt="avatar" />
-                <input type="file" id="avatar" hidden />
+                <input type="file" hidden />
               </div>
               <div class="text">
                 (Vui lòng chọn ảnh có định dạng .jpg. .jpeg. .png. .gif.)
@@ -278,7 +291,7 @@
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Nữ
                       </div>
-                      <div class="option-item" value="2">
+                      <div class="option-item" tabindex="7" value="2">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Chưa xác định
                       </div>
@@ -293,7 +306,7 @@
                     type="text"
                     id="txtIdentityNumber"
                     class="text-box-default"
-                    tabindex="7"
+                    tabindex="8"
                     required
                   />
                 </div>
@@ -305,7 +318,7 @@
                     type="date"
                     id="txtIdentityDate"
                     class="text-box-default"
-                    tabindex="8"
+                    tabindex="9"
                   />
                 </div>
                 <div class="input custom-input">
@@ -316,7 +329,7 @@
                     type="text"
                     id="txtIdentityPlace"
                     class="text-box-default"
-                    tabindex="9"
+                    tabindex="10"
                   />
                 </div>
                 <div class="input">
@@ -328,7 +341,7 @@
                     type="text"
                     id="txtEmail"
                     class="text-box-default"
-                    tabindex="10"
+                    tabindex="11"
                   />
                 </div>
                 <div class="input">
@@ -340,7 +353,7 @@
                     type="text"
                     id="txtPhone"
                     class="text-box-default"
-                    tabindex="11"
+                    tabindex="12"
                   />
                 </div>
                 <div class="infomation-title">
@@ -351,14 +364,20 @@
                     >Vị trí</label
                   >
                   <div class="dropdown">
-                    <div id="select-position-form" class="select" tabindex="12">
+                    <div
+                      id="select-position-form"
+                      class="select"
+                      prop-id="PositionId"
+                      prop-name="PositionName"
+                      tabindex="13"
+                    >
                       <span class="text">Chọn vị trí</span>
                       <span class="icon"
                         ><i class="fas fa-chevron-down"></i
                       ></span>
                     </div>
-                    <div id="option-position-form" class="option" tabindex="13">
-                      <div class="option-item active">
+                    <div id="option-position-form" class="option">
+                      <div class="option-item active" tabindex="14">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Chọn vị trí
                       </div>
@@ -373,19 +392,17 @@
                     <div
                       id="select-department-form"
                       class="select"
-                      tabindex="14"
+                      tabindex="15"
+                      prop-id="DepartmentId"
+                      prop-name="DepartmentName"
                     >
                       <span class="text">Chọn phòng ban</span>
                       <span class="icon"
                         ><i class="fas fa-chevron-down"></i
                       ></span>
                     </div>
-                    <div
-                      id="option-department-form"
-                      class="option"
-                      tabindex="15"
-                    >
-                      <div class="option-item active">
+                    <div id="option-department-form" class="option">
+                      <div class="option-item active" tabindex="16">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Chọn phòng ban
                       </div>
@@ -400,7 +417,7 @@
                     type="text"
                     id="txtTaxCode"
                     class="text-box-default"
-                    tabindex="16"
+                    tabindex="17"
                   />
                 </div>
                 <div class="input">
@@ -412,7 +429,7 @@
                       type="text"
                       id="txtSalary"
                       class="text-box-default"
-                      tabindex="17"
+                      tabindex="18"
                     />
                     <span class="icon">(VNĐ)</span>
                   </div>
@@ -427,7 +444,7 @@
                     type="date"
                     id="txtDayOfJoin"
                     class="text-box-default"
-                    tabindex="18"
+                    tabindex="19"
                   />
                 </div>
                 <div class="input">
@@ -435,22 +452,22 @@
                     >Tình trạng công việc</label
                   >
                   <div class="dropdown">
-                    <div id="select-status-id" class="select" tabindex="19">
+                    <div id="select-status-form" class="select" tabindex="20">
                       <span class="text">Đang làm việc</span>
                       <span class="icon"
                         ><i class="fas fa-chevron-down"></i
                       ></span>
                     </div>
-                    <div id="option-status-id" class="option" tabindex="20">
-                      <div class="option-item active" value="0">
+                    <div id="option-status-form" class="option">
+                      <div class="option-item active" value="0" tabindex="21">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Đang làm việc
                       </div>
-                      <div class="option-item" value="1">
+                      <div class="option-item" value="1" tabindex="21">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Đã nghỉ việc
                       </div>
-                      <div class="option-item" value="2">
+                      <div class="option-item" value="2" tabindex="21">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Đang thử việc
                       </div>
@@ -462,17 +479,17 @@
           </div>
         </form>
         <div class="modal-footer">
-          <button class="btn-cancel button" id="btn-cancel" tabindex="22">
+          <button class="btn-cancel button" id="btn-cancel" tabindex="23">
             Hủy
           </button>
-          <button class="btn-save button-icon" id="btn-save" tabindex="21">
+          <button class="btn-save button-icon" id="btn-save" tabindex="22">
             <span class="icon-left"><i class="far fa-save"></i></span>
             <span class="text">Lưu</span>
           </button>
         </div>
       </div>
     </div>
-    <script src="/js/lib/jquery.js"></script>
+    <!-- <script src="/js/lib/jquery.js"></script>
     <script src="/js/services/workStatus.js"></script>
     <script src="/js/services/employeeData.js"></script>
 
@@ -481,8 +498,12 @@
     <script src="/js/base/table.js"></script>
     <script src="/js/base/form-modal.js"></script>
     <script src="/js/base/common.js"></script>
-    <script src="/js/base/button.js"></script>
+    <script src="/js/base/button.js"></script> -->
 
-    <script src="/js/page/employee.js"></script>
+    <script src="/js/page/common.js"></script>
+    <script src="/js/page/base.js"></script>
+
+    <!-- <script src="/js/page/employee.js"></script> -->
+    <script src="/js/page/employee-oop.js"></script>
   </body>
 </html>

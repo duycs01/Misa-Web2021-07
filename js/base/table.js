@@ -3,7 +3,7 @@ function tableEmployee() {
   const idTableBody = $("#table-body");
   try {
     // 1. Gọi api lấy tất cả dữ liệu
-    const res = callRequest("GET", urlDepartment);
+    const res = CallRequest("GET", urlDepartment);
 
     // 2. Khi api trả response về thực hiện các chức năng
     res.onreadystatechange = function () {
@@ -13,7 +13,36 @@ function tableEmployee() {
         console.log(data);
 
         // Hiển thị dữ liệu ra màn hình
-        renderDataTable(idTableBody, data);
+        let rowTable = "";
+        data.forEach((item, index) => {
+          let Salary = money(item.Salary);
+          let DateOfBirth = fomatDate(item.DateOfBirth);
+          let WorkStatus = workStatus(item.WorkStatus);
+
+          rowTable += `<tr data-row='${item.EmployeeId}'><td>${
+            index + 1
+          }</td><td>${item.EmployeeCode}</td><td>${
+            item.FullName
+          }</td><td class="text-center">${
+            item.GenderName
+          }</td><td class="text-center date">${DateOfBirth}</td><td class="text-center">${
+            item.PhoneNumber
+          }</td><td>${item.Email}</td><td>${item.PositionName}</td><td>${
+            item.DepartmentName
+          }</td><td class="text-right money">${Salary}</td><td>${WorkStatus}</td></tr>`;
+        });
+        idTableBody.innerHTML = rowTable;
+        var rows = idTableBody.children;
+        if (rows) {
+          for (let i = 0; i < rows.length; i++) {
+            rows[i].ondblclick = function (e) {
+              $("#modal-info").classList.toggle("block");
+              var dataId = rows[i].getAttribute("data-row");
+              $("#btn-save").setAttribute("control", "edit");
+              getEmployeeById(dataId);
+            };
+          }
+        }
       }
     };
   } catch (error) {
@@ -21,33 +50,4 @@ function tableEmployee() {
   }
 }
 
-function renderDataTable(idTableBody, dataTable) {
-  let rowTable = "";
-  dataTable.forEach((item, index) => {
-    let Salary = money(item.Salary);
-    let DateOfBirth = fomatDate(item.DateOfBirth);
-    let WorkStatus = workStatus(item.WorkStatus);
-
-    rowTable += `<tr data-row='${item.EmployeeId}'><td>${index + 1}</td><td>${
-      item.EmployeeCode
-    }</td><td>${item.FullName}</td><td class="text-center">${
-      item.GenderName
-    }</td><td class="text-center date">${DateOfBirth}</td><td class="text-center">${
-      item.PhoneNumber
-    }</td><td>${item.Email}</td><td>${item.PositionName}</td><td>${
-      item.DepartmentName
-    }</td><td class="text-right money">${Salary}</td><td>${WorkStatus}</td></tr>`;
-  });
-  idTableBody.innerHTML = rowTable;
-  var rows = idTableBody.children;
-  if (rows) {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i].ondblclick = function (e) {
-        $("#modal-info").classList.toggle("block");
-        var dataId = rows[i].getAttribute("data-row");
-        $("#btn-save").setAttribute("control", "edit");
-        getEmployeeById(dataId);
-      };
-    }
-  }
-}
+function renderDataTable(idTableBody, dataTable) {}

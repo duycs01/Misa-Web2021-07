@@ -8,7 +8,7 @@ function getEmployeeById(id) {
 
   try {
     // 1. Gọi api lấy dữ liệu
-    let res = callRequest("GET", urlEmployee + id);
+    let res = CallRequest("GET", urlEmployee + id);
     res.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         const data = JSON.parse(this.responseText);
@@ -29,11 +29,11 @@ function getEmployeeById(id) {
  */
 function updateEmployeeById() {
   const url = "http://cukcuk.manhnv.net/v1/Employees/";
-  let check = alo();
+  let check = checkInputRequired();
   if (!check) {
     getFormData();
     try {
-      let res = callRequest("PUT", url + employeeData.employeeId, employeeData);
+      let res = CallRequest("PUT", url + employeeData.employeeId, employeeData);
       res.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           let data = JSON.parse(this.responseText);
@@ -53,11 +53,11 @@ function updateEmployeeById() {
 
 function insertEmployee() {
   const url = "http://cukcuk.manhnv.net/v1/Employees";
-  let check = alo();
+  let check = checkInputRequired();
   if (!check) {
     getFormData();
     try {
-      let res = callRequest("POST", url, employeeData);
+      let res = CallRequest("POST", url, employeeData);
       res.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 201) {
           let data = JSON.parse(this.responseText);
@@ -77,7 +77,7 @@ function insertEmployee() {
 function getNewEmployeeCode() {
   const url = "http://cukcuk.manhnv.net/v1/Employees/NewEmployeeCode";
   try {
-    let res = callRequest("GET", url);
+    let res = CallRequest("GET", url);
     res.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let data = this.responseText;
@@ -95,7 +95,7 @@ function getNewEmployeeCode() {
 function bindingData(data) {
   // Hàm sử lí tiền tệ
   debugger;
-  console.log($("#select-status-id").children[0]);
+  console.log($("#select-status-form").children[0]);
 
   let salary = money(data.Salary);
   let DateOfBirth = fomatDateForm(data.DateOfBirth);
@@ -123,8 +123,8 @@ function bindingData(data) {
   $("#txtTaxCode").value = data.PersonalTaxCode;
   $("#txtSalary").value = salary;
   $("#txtDayOfJoin").value = JoinDate;
-  $("#select-status-id").children[0].setAttribute("value", data.WorkStatus);
-  console.log($("#select-status-id").children[0]);
+  $("#select-status-form").children[0].setAttribute("value", data.WorkStatus);
+  console.log($("#select-status-form").children[0]);
 
   dropdownOfForm();
 }
@@ -145,7 +145,7 @@ function resetData() {
   $("#txtTaxCode").value = "";
   $("#txtSalary").value = "";
   $("#txtDayOfJoin").value = "";
-  $("#select-status-id").children[0].setAttribute("value", 1);
+  $("#select-status-form").children[0].setAttribute("value", 1);
   dropdownOfForm();
 }
 
@@ -153,7 +153,7 @@ function resetData() {
 function getFormData() {
   debugger;
   let val = $("#txtSalary").value;
-  let workStatus = +$("#select-status-id").children[0].getAttribute("value");
+  let workStatus = +$("#select-status-form").children[0].getAttribute("value");
   let salary = +val.replaceAll(".", "");
   employeeData.EmployeeCode = $("#txtEmployeeCode").value;
   employeeData.FullName = $("#txtFullName").value;
@@ -195,55 +195,43 @@ $("#txtSalary").oninput = function () {
 function dropdownOfForm() {
   // Thực hiện bật tắt dropdown trong form
   showDropdown("#select-gender", "#option-gender");
-  showDropdown("#select-status-id", "#option-status-id");
+  showDropdown("#select-status-form", "#option-status-form");
   showDropdown("#select-position-form", "#option-position-form");
   showDropdown("#select-department-form", "#option-department-form");
-  focusDropdown("#select-gender", "#option-gender");
-  focusDropdown("#select-status-id", "#option-status-id");
-  focusDropdown("#select-position-form", "#option-position-form");
-  focusDropdown("#select-department-form", "#option-department-form");
+
   // Kiểm tra active của dropdown trong form
   checkActive("#select-gender", "#option-gender");
-  checkActive("#select-status-id", "#option-status-id");
+  checkActive("#select-status-form", "#option-status-form");
   checkActive("#select-department-form", "#option-department-form");
   checkActive("#select-position-form", "#option-position-form");
 }
+
 for (let i = 0; i < $("input[required]").length; i++) {
+  let check = false;
+
   $("input[required]")[i].addEventListener("blur", function () {
-    console.log(this);
-    let label = $(`label[for="${this.id}"]`);
-    if (this.value == "") {
-      label[0].className += " tooltip";
-      this.className += " border-red";
-      this.focus();
-    } else if (
-      label[0].className.includes("tooltip") &&
-      this.className.includes("border-red")
-    ) {
-      label[0].classList.remove("tooltip");
-      this.classList.remove("border-red");
-    }
+    alertInput(this, check);
   });
 }
 
-function alo(check) {
-  check = false;
+function checkInputRequired() {
+  let check = false;
   for (let i = 0; i < $("input[required]").length; i++) {
-    const input = $("input[required]")[i];
-    let label = $(`label[for="${input.id}"]`);
-    if (input.value == "") {
-      label[0].className += " tooltip";
-      input.className += " border-red";
-      input.focus();
-      check = true;
-      break;
-    } else if (
-      label[0].className.includes("tooltip") &&
-      input.className.includes("border-red")
-    ) {
-      label[0].classList.remove("tooltip");
-      input.classList.remove("border-red");
-    }
+    let input = $("input[required]")[i];
+    check = alertInput(input, check);
+  }
+  return check;
+}
+function alertInput(input, check) {
+  let label = $(`label[for="${input.id}"]`);
+  if (input.value == "" && check == false) {
+    label[0].className += " tooltip";
+    input.className += " border-red";
+    input.focus();
+    check = true;
+  } else {
+    label[0].classList.remove("tooltip");
+    input.classList.remove("border-red");
   }
   return check;
 }

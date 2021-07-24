@@ -23,6 +23,11 @@
   background: #fff;
   outline: none;
   box-sizing: border-box;
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer */
+  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
 }
 .combo-box .select .text:focus {
   border-color: #019160;
@@ -67,6 +72,7 @@
   display: flex;
   align-items: center;
   height: 40px;
+  outline: none;
 }
 .combo-box .option-item .icon {
   padding: 0 10px;

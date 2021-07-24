@@ -1,4 +1,4 @@
-function callRequest(method, url, body) {
+function CallRequest(method, url, body) {
   const xhr = new XMLHttpRequest();
   try {
     xhr.open(method, url);

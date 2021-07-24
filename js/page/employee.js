@@ -5,8 +5,10 @@ function init() {
   btnToggle();
 
   //** Hàm mở modal ở nút thêm nhân viên*/
-  showModal($("#btn-add"), $("#modal-info"));
+  ShowHideModal($("#btn-add"), $("#modal-info"));
 
   //** Hàm tắt modal ở nút close trong modal  */
-  showModal($("#btn-close"), $("#modal-info"));
+  ShowHideModal($("#btn-close"), $("#modal-info"));
+  ShowHideModal($("#btn-cancel"), $("#modal-info"));
+  new EmployeeCode();
 }

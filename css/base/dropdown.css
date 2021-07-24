@@ -45,6 +45,7 @@
   align-items: center;
   height: 40px;
   cursor: pointer;
+  outline: none;
 }
 .dropdown .option-item .icon {
   padding: 0 10px;
