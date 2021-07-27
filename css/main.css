@@ -1,18 +1,20 @@
-@import url("base/button.css");
-@import url("base/text-box.css");
-@import url("base/input-icon.css");
-@import url("base/dropdown.css");
-@import url("base/button-icon.css");
-@import url("base/table.css");
-@import url("base/combo-box.css");
-@import url("commom/common.css");
-@import url("base/popup.css");
-@import url("base/tooltip.css");
+@import url("base/Button.css");
+@import url("base/TextBox.css");
+@import url("base/InputIcon.css");
+@import url("base/Dropdown.css");
+@import url("base/ButtonIcon.css");
+@import url("base/Table.css");
+@import url("base/ComboBox.css");
+@import url("commom/Common.css");
+@import url("base/Popup.css");
+@import url("base/Tooltip.css");
+@import url("base/ModalForm.css");
+@import url("base/CheckBox.css");
 
-@import url("layout/pagination.css");
-@import url("layout/header.css");
-@import url("layout/content.css");
-@import url("layout/menu.css");
+@import url("base/Pagination.css");
+@import url("layout/Header.css");
+@import url("layout/Content.css");
+@import url("layout/Menu.css");
 
 body {
   font-family: MisaGoogleSans;

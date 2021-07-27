@@ -18,22 +18,22 @@
 }
 
 .button-red {
-  background: #f65454;
+  background: #F65454 !important;
 }
 .button-red:hover {
-  background: #fa9595;
+  background: #fa9595 !important;
 }
 .button-red:active,
 .button-red:focus {
-  background: #fa9595;
+  background: #fa9595 !important;
 }
 
 .button-gray {
-  background: #e5e5e5;
-  color: #000;
+  background: #e5e5e5 !important;
+  color: #000 !important;
 }
 .button-gray:hover {
-  background: #cac9c9;
+  background: #cac9c9 !important;
 }
 .button-gray:active,
 .button-gray:focus {

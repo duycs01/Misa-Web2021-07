@@ -5,6 +5,10 @@ class Base extends Common {
     this.urltable = urltable;
     // this.loadData();
   }
+  /**
+   * Hàm tạo bảng và load dữ liệu
+   * Create by: nvduy(19/7/2021)
+   */
   loadData() {
     let me = this;
     if (me.tableId == null) {
@@ -13,13 +17,18 @@ class Base extends Common {
     }
     try {
       //   gọi api lấy dữ liệu
-      let res = me.CallRequest("GET", me.urltable);
-      console.log(123);
+      let res = Common.callRequest("GET", me.urltable);
       res.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+          let a = document.querySelector(`${me.tableId} #table-body`);
+          console.log("before", a);
+          a.innerHTML = "";
+          console.log("after", a);
+
           //2.Sử lí dữ liệu
           // convert json
           const entities = JSON.parse(this.responseText);
+
           // 2.1 Duyệt tưng đối tượng
           entities.forEach((entity) => {
             // xác định các cột dữ liệu - bao nhiêu cột
@@ -36,38 +45,41 @@ class Base extends Common {
             // Thêm dữ liệu vào từng cột
             columns.forEach((col) => {
               const propName = col.getAttribute("prop-name");
+
               let value = entity[propName];
               let tdHTML = document.createElement("TD");
               switch (propName) {
                 case "DateOfBirth":
-                  value = me.FomatDate(value, tdHTML);
+                  value = Common.fomatDate(value, tdHTML);
                   break;
                 case "Salary":
-                  value = me.FomatMoney(value, tdHTML);
+                  value = Common.fomatMoney(value, tdHTML);
                   break;
                 case "Gender":
-                  value = me.FomatGender(value, tdHTML);
+                  value = Common.fomatGenderToName(value, tdHTML);
                   break;
                 case "WorkStatus":
-                  value = me.FomatWorkStatus(value);
+                  value = Common.fomatWorkStatusToName(value);
+                  break;
+                case "#":
+                  trHTML.innerHTML = `<td><div class="check-box"><input type="checkbox"><span class="checkmark"></span></div></tr>`
                   break;
                 default:
                   break;
               }
-
-              tdHTML.append(value);
-              trHTML.append(tdHTML);
+              if (propName !== '#') {
+                tdHTML.append(value);
+                trHTML.append(tdHTML);
+              }
             });
 
             // Hiển thị giá trị ra màn hình
             let tbodyHTML = document.createElement("TBODY");
             tbodyHTML.append(trHTML);
-            trHTML.ondblclick = function (e) {
-              console.log(tbodyHTML.classList);
+            trHTML.ondblclick = function () {
               let modal = document.querySelector(EmployeeCode.modalId);
               modal.classList.toggle("block");
               var dataId = trHTML.getAttribute("value");
-              console.log(dataId);
               me.getDataById(dataId);
               modal.setAttribute("form-mode", 0);
             };
@@ -89,7 +101,7 @@ class Base extends Common {
     let me = this;
     try {
       // 1. Gọi api lấy dữ liệu
-      let res = this.CallRequest("GET", this.urltable + id);
+      let res = Common.callRequest("GET", this.urltable + id);
       res.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           const data = JSON.parse(this.responseText);
@@ -108,11 +120,11 @@ class Base extends Common {
    */
   insertData() {
     let me = this;
-    let check = me.checkInputRequired();
+    let check = Common.checkInputRequired();
     if (!check) {
       EmployeeCode.getFormData();
       try {
-        let res = me.CallRequest(
+        let res = Common.callRequest(
           "POST",
           me.urltable,
           EmployeeCode.employeeData
@@ -141,11 +153,11 @@ class Base extends Common {
    */
   updataData() {
     let me = this;
-    let check = me.checkInputRequired();
+    let check = Common.checkInputRequired();
     if (!check) {
       EmployeeCode.getFormData();
       try {
-        let res = me.CallRequest(
+        let res = Common.callRequest(
           "PUT",
           me.urltable + EmployeeCode.employeeData.employeeId,
           EmployeeCode.employeeData
@@ -164,6 +176,36 @@ class Base extends Common {
         alert("Đã sửa thất bại! Vui lòng liên hệ Dev");
         console.log(error);
       }
+    }
+  }
+
+  /**
+   * Hàm xóa dữ liệu nhân viên
+   * Create by: nvduy(20/7/2021)
+   */
+  deleteDataById(id) {
+    let me = this;
+
+    try {
+      let res = Common.callRequest(
+        "DELETE",
+        me.urltable + id,
+      );
+      res.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          let data = JSON.parse(this.responseText);
+          if (data) {
+            alert("Đã xóa thành công");
+            me.loadData();
+          }
+          else {
+            alert("Đã xóa thất bại! Vui lòng liên hệ Dev");
+          }
+        }
+      };
+    } catch (error) {
+      alert("Đã sửa thất bại! Vui lòng liên hệ Dev");
+      console.log(error);
     }
   }
 }
@@ -188,7 +230,7 @@ class Dropdown extends Common {
 
     try {
       // 1. Gọi api lấy tất cả dữ liệu
-      const res = me.CallRequest("GET", me.urlDropdown);
+      const res = Common.callRequest("GET", me.urlDropdown);
       // Lấy dữ liệu Hiển thị ra màn hình
 
       // 2. Khi api trả response về thực hiện các chức năng
@@ -206,7 +248,7 @@ class Dropdown extends Common {
                 </span>`;
 
           // bắt sự kiện ẩn hiện dropdown
-          me.btnDropdown(me.selectId, me.optionId);
+          Dropdown.btnDropdown(me.selectId, me.optionId);
 
           // 2.1 Duyệt từng phần tử hiển thị ra màn hình
           dataDropdown.forEach((item) => {
@@ -220,7 +262,7 @@ class Dropdown extends Common {
             // 2.3 Bắt sự kiện click khi nhấn vào option item
             if (optionItem) {
               optionItem.addEventListener("click", function () {
-                me.ActiveOptionItem(select, options, optionItem);
+                Dropdown.activeOptionItem(select, options, optionItem);
               });
             }
           });
@@ -229,7 +271,7 @@ class Dropdown extends Common {
           let lastIndexOptionItem =
             options.children[options.children.length - 1];
           lastIndexOptionItem.addEventListener("click", function () {
-            me.ActiveOptionItem(select, options, lastIndexOptionItem);
+            Dropdown.activeOptionItem(select, options, lastIndexOptionItem);
           });
         }
       };
@@ -238,13 +280,14 @@ class Dropdown extends Common {
     }
   }
 
+
   /**
-   *Hàm bật sử lí dropdown
+   *Hàm bật sử lí click dropdown
    * @param {*} selectId Id của select dropdown
    * @param {*} optionId Id của option chứa option item
    * Create by: nvduy(19/7/2021)
    */
-  btnDropdown(selectId, optionId) {
+  static btnDropdown(selectId, optionId) {
     let me = this;
     // 1. Kiểm tra click
     let click = false;
@@ -256,16 +299,16 @@ class Dropdown extends Common {
       click = !click;
       //Thực hiện thay đổi khi click
       if (click) {
-        me.ShowHideDropdown(selectId, optionId, true);
+        Dropdown.showHideDropdown(selectId, optionId, true);
       } else {
-        me.ShowHideDropdown(selectId, optionId, false);
+        Dropdown.showHideDropdown(selectId, optionId, false);
       }
       // 3.Bắt sự kiện click ra ngoài dropdown
       if (click) {
         console.log(click);
         window.addEventListener("click", function (e) {
           if (e.target !== select && !select.contains(e.target) && click) {
-            me.ShowHideDropdown(selectId, optionId, false);
+            Dropdown.showHideDropdown(selectId, optionId, false);
             click = !click;
           }
         });
@@ -285,7 +328,7 @@ class Dropdown extends Common {
    * Hàm sử lí ẩn hiện dropdown khi click
    * Create by: 19/7/2020 nvduy
    */
-  ShowHideDropdown(selectId, optionId, click) {
+  static showHideDropdown(selectId, optionId, click) {
     let select = document.querySelector(selectId);
     let icon = document.querySelector(`${selectId} i`);
     let option = document.querySelector(optionId);
@@ -304,7 +347,7 @@ class Dropdown extends Common {
    * Hàm sử lí active option item dropdown
    * Create by: 19/7/2020 nvduy
    */
-  ActiveOptionItem(select, option, optionItem) {
+  static activeOptionItem(select, option, optionItem) {
     let textOfSelect = select.querySelector(".text");
     let optionActive = option.querySelector(".active");
 

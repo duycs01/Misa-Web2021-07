@@ -1,3 +1,21 @@
+:root {
+  --primary: #01b075;
+  --hover: #2fbe8e;
+  --default: #019160;
+  --focus: #ebf9f4;
+  --color-red: #f65454;
+  --color: #ffebeb;
+  --color-blue: #0075ff;
+  --color-blue-sky: #ebf4ff;
+  --color-orange: #ff6900;
+  --color-orange-pink: #fff3eb;
+  --color-000: #000000;
+  --color-45: #454545;
+  --color-bbb: #bbbbbb;
+  --color-e5: #e5e5e5;
+  --color-e9: #e9ebee;
+}
+
 .text-center {
   text-align: center !important;
 }
@@ -19,4 +37,10 @@
 }
 .hidden {
   display: none !important;
+}
+.flex {
+  display: flex !important;
+}
+.gap-4{
+  gap: 16px;
 }

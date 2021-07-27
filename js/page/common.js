@@ -1,5 +1,5 @@
 class Common {
-  constructor() {}
+  constructor() { }
   /**
    * Hàm gọi api
    * @param {*} method
@@ -7,11 +7,10 @@ class Common {
    * @param {*} body
    * @returns
    */
-  CallRequest(method, urlServer, body) {
+  static callRequest(method, urlServer, body) {
     const xhr = new XMLHttpRequest();
     try {
       xhr.open(method, urlServer);
-      console.log(urlServer);
       xhr.setRequestHeader("content-type", "application/json; charset=utf-8");
       xhr.setRequestHeader("access-control-allow-credentials", true);
       xhr.setRequestHeader("Accept", "application/json");
@@ -38,7 +37,7 @@ class Common {
    * @returns Chuỗi đã được định dạng
    * Create by: nvduy(20/7/2021)
    */
-  FomatMoney(num, col) {
+  static fomatMoney(num, col) {
     if (col) {
       col.style = "text-align:right;";
     }
@@ -53,7 +52,7 @@ class Common {
    * @returns Chuỗi đã được định dạng
    * Create by: nvduy(20/7/2021)
    */
-  FomatDate(date, col) {
+  static fomatDate(date, col) {
     if (col) {
       col.style = "text-align:center;";
     }
@@ -80,7 +79,7 @@ class Common {
    * @returns Chuỗi đã được định dạng
    * Create by: nvduy(20/7/2021)
    */
-  FomatDateForm(date) {
+  static fomatDateForm(date) {
     if (date !== null) {
       var dateString = "";
       var newDate = new Date(date);
@@ -93,7 +92,7 @@ class Common {
       if (month < 10) {
         month = "0" + month;
       }
-      dateString = `${year}-${month}-${date}`;
+      dateString = `${year}-${date}-${month}`;
       return dateString;
     }
   }
@@ -103,65 +102,48 @@ class Common {
    * @returns Trả ra text tương ứng
    * Create by: nvduy(20/7/2021)
    */
-  FomatWorkStatus(status) {
+  static fomatWorkStatusToName(status) {
     if (status)
       switch (status) {
-        case 0:
-          return "Đang làm việc";
-          break;
         case 1:
-          return "Chưa làm việc";
+          return "Đang làm việc";
           break;
         case 2:
           return "Đang thử việc";
           break;
-        case 3:
-          return "Sắp làm việc";
-          break;
-        case 4:
-          return "Sẽ làm việc";
-          break;
-        case 5:
-          return "Nhân viên chính thức";
-          break;
-        case 6:
-          return "Đã nghỉ việc";
-          break;
-
         default:
           return "Đã nghỉ việc";
           break;
       }
   }
+
   /**
    * Hàm sử lí giới tính
-   * @param {*} status Truyền vào giới tính 0,1,2
-   * @returns Trả ra text tương ứng
    * Create by: nvduy(20/7/2021)
    */
-  FomatGender(gender, col) {
+  static fomatGenderToName(gender, col) {
     if (col) {
       col.style = "text-align:center";
     }
-    if (gender)
-      switch (gender) {
-        case 0:
-          return "Nữ";
-          break;
-        case 1:
-          return "Nam";
-          break;
-        default:
-          return "Chưa xác định";
-          break;
-      }
+    switch (gender) {
+      case 0:
+        return "Nữ";
+        break;
+      case 1:
+        return "Nam";
+        break;
+
+      default:
+        return "Chưa xác định";
+        break;
+    }
   }
 
   /**
    * Hàm bắt sự kiện tab kiểm tra tất cả input required
    * Create by: nvduy(20/7/2021)
    */
-  checkInputRequiredBlur() {
+  static checkInputRequiredBlur() {
     let me = this;
     var inputRequireds = document.querySelectorAll("input[required]");
 
@@ -177,12 +159,13 @@ class Common {
    * Hàm kiểm tra tất cả input required
    * Create by: nvduy(20/7/2021)
    */
-  checkInputRequired() {
+  static checkInputRequired() {
     let check = false;
+    // tôi nghĩ là do cái này
     var inputRequireds = document.querySelectorAll("input[required]");
     for (let i = 0; i < inputRequireds.length; i++) {
       let inputRequired = inputRequireds[i];
-      check = this.alertInput(inputRequired, check);
+      check = Common.alertInput(inputRequired, check);
     }
     return check;
   }
@@ -191,26 +174,83 @@ class Common {
    * Hàm hiện thị thông báo input
    * Create by: nvduy(20/7/2021)
    */
-  alertInput(input, check) {
+  static alertInput(input, check) {
     let label = document.querySelector(`label[for="${input.id}"]`);
-    if (input.value == "" && check == false) {
-      label.className += " tooltip";
-      input.className += " border-red";
+    if (input.required && input.value == "" && !check) {
+      label.setAttribute('data-content', 'Trường này không được để trống!')
+      label.classList.add("tooltip-input-required");
+      input.classList.add("border-red");
       input.focus();
       check = true;
-    } else {
-      label.classList.remove("tooltip");
-      input.classList.remove("border-red");
     }
+    else {
+      label.classList.remove("tooltip-input-required");
+      input.classList.remove("border-red");
+      label.setAttribute('data-content', '')
+    }
+
     return check;
   }
 
+  static alertInputEmail(input, check) {
+    let label = document.querySelector(`label[for="${input.id}"]`);
+
+    if (input.type == 'email' && !check) {
+      label.setAttribute('data-content', 'Email không đúng định dạng!')
+      label.classList.add("tooltip-input-required");
+      input.classList.add("border-red");
+      input.focus();
+      check = true;
+    }
+    else {
+      label.classList.remove("tooltip-input-required");
+      input.classList.remove("border-red");
+      label.setAttribute('data-content', '')
+    }
+  }
+  static alertInputPhone(input, check) {
+    let label = document.querySelector(`label[for="${input.id}"]`);
+
+    if (input.type == 'text' && !check) {
+      label.setAttribute('data-content', 'Số điện thoại không đúng định dạng!')
+      label.classList.add("tooltip-input-required");
+      input.classList.add("border-red");
+      input.focus();
+      check = true;
+    }
+    else {
+      label.classList.remove("tooltip-input-required");
+      input.classList.remove("border-red");
+      label.setAttribute('data-content', '')
+    }
+  }
   /**
    * Hàm kiểm tra định dạng email
    */
-  validateEmail(email) {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
+  static validateEmail() {
+    let testInput
+    // chỗ này tôi lấy những thằng có type là email
+    var inputEmail = document.querySelector("input[type=email]");
+    inputEmail.addEventListener("blur", function () {
+      let re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (inputEmail.value) {
+        testInput = Common.alertInputEmail(inputEmail, re.test(String(inputEmail.value).toLowerCase()));
+      }
+    })
+    return testInput
+  }
+
+  static validatePhone() {
+    let testInput = false
+    var inputPhone = document.querySelector("input[type=phone]");
+    inputPhone.addEventListener("blur", function () {
+      debugger
+      let phoneNumber = inputPhone.value
+
+      if (!Number.isNaN(phoneNumber)) {
+        return Common.alertInputPhone(inputPhone, testInput);
+      }
+    })
   }
 }

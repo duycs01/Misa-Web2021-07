@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/layout/modal-form.css" />
 
     <link
       rel="stylesheet"
@@ -84,6 +83,18 @@
     <div class="content">
       <div class="title">
         <div class="name-table">Danh sách nhân viên</div>
+        <div class="flex gap-4">
+          <button
+          type="button"
+          id="btn-delete"
+          class="button-icon btn-add button-red"
+          data-show="false"
+        >
+          <span class="icon-left">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+          <span type="button" class="text">Xóa nhân viên</span>
+        </button>
         <button
           type="button"
           id="btn-add"
@@ -95,6 +106,8 @@
           </span>
           <span type="button" class="text">Thêm nhân viên</span>
         </button>
+        </div>
+        
       </div>
       <div class="control">
         <div class="search input-icon">
@@ -163,7 +176,7 @@
         <table id="table-employee">
           <thead id="table-title">
             <tr prop-id="EmployeeId">
-              <!-- <th prop-name="EmployeeId">#</th> -->
+              <th prop-name="#" class="text-center">#</th>
               <th prop-name="EmployeeCode">Mã nhân viên</th>
               <th prop-name="FullName">Họ và tên</th>
               <th class="text-center" prop-name="Gender">Giới tính</th>
@@ -209,7 +222,7 @@
     </div>
     <div class="modal" id="modal-employee">
       <div class="modal-content" id="modal-content">
-        <button type="button" id="btn-close" class="btn-icon button">
+        <button type="button" id="btn-close-form" class="btn-icon button">
           <i class="fas fa-times"></i>
         </button>
         <form action="#" class="form">
@@ -269,15 +282,11 @@
                   <label for="select-gender" class="title-input"
                     >Giới tính</label
                   >
-                  <div class="combo-box">
-                    <div id="select-gender" class="select">
-                      <input
-                        tabindex="4"
-                        type="text"
-                        value="Chưa xác định"
-                        class="text"
-                        readonly
-                      />
+                  <div class="dropdown">
+                    <div id="select-gender" class="select" tabindex="4">
+                      <span value="Chưa xác định" class="text"
+                        >Chưa xác định</span
+                      >
                       <span class="icon"
                         ><i class="fas fa-chevron-down"></i
                       ></span>
@@ -338,7 +347,7 @@
                   >
                   <input
                     required
-                    type="text"
+                    type="email"
                     id="txtEmail"
                     class="text-box-default"
                     tabindex="11"
@@ -350,7 +359,7 @@
                   >
                   <input
                     required
-                    type="text"
+                    type="phone"
                     id="txtPhone"
                     class="text-box-default"
                     tabindex="12"
@@ -377,7 +386,7 @@
                       ></span>
                     </div>
                     <div id="option-position-form" class="option">
-                      <div class="option-item active" tabindex="14">
+                      <div class="option-item active" value="0" tabindex="14">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Chọn vị trí
                       </div>
@@ -402,7 +411,7 @@
                       ></span>
                     </div>
                     <div id="option-department-form" class="option">
-                      <div class="option-item active" tabindex="16">
+                      <div class="option-item active" value="0" tabindex="16">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Chọn phòng ban
                       </div>
@@ -459,17 +468,17 @@
                       ></span>
                     </div>
                     <div id="option-status-form" class="option">
-                      <div class="option-item active" value="0" tabindex="21">
+                      <div class="option-item active" value="1" tabindex="21">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Đang làm việc
-                      </div>
-                      <div class="option-item" value="1" tabindex="21">
-                        <span class="icon"> <i class="fas fa-check"></i></span>
-                        Đã nghỉ việc
                       </div>
                       <div class="option-item" value="2" tabindex="21">
                         <span class="icon"> <i class="fas fa-check"></i></span>
                         Đang thử việc
+                      </div>
+                      <div class="option-item" value="3" tabindex="21">
+                        <span class="icon"> <i class="fas fa-check"></i></span>
+                        Đã nghỉ việc
                       </div>
                     </div>
                   </div>
@@ -479,7 +488,7 @@
           </div>
         </form>
         <div class="modal-footer">
-          <button class="btn-cancel button" id="btn-cancel" tabindex="23">
+          <button class="btn-cancel button" id="btn-cancel-form" tabindex="23">
             Hủy
           </button>
           <button class="btn-save button-icon" id="btn-save" tabindex="22">
@@ -489,21 +498,31 @@
         </div>
       </div>
     </div>
-    <!-- <script src="/js/lib/jquery.js"></script>
-    <script src="/js/services/workStatus.js"></script>
-    <script src="/js/services/employeeData.js"></script>
-
-    <script src="/js/services/request.js"></script>
-    <script src="/js/base/dropdown.js"></script>
-    <script src="/js/base/table.js"></script>
-    <script src="/js/base/form-modal.js"></script>
-    <script src="/js/base/common.js"></script>
-    <script src="/js/base/button.js"></script> -->
-
+    <div class="popup" id="popup-delete">
+      <div class="body-popup">
+        <button type="button" class="btn-icon button" id="btn-close-popup">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="title-popup">Thông báo</div>
+        <div class="content-popup">
+          <div class="icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="text">
+            Bạn có muốn xóa thông tin đã chọn
+            hay không?
+          </div>
+        </div>
+        <div class="control-popup">
+          <button class="button button-gray" id="btn-cancel-popup">Hủy</button>
+          <button class="button button-red" id="btn-delete-accept">Xóa</button>
+        </div>
+      </div>
+    </div>
     <script src="/js/page/common.js"></script>
     <script src="/js/page/base.js"></script>
 
     <!-- <script src="/js/page/employee.js"></script> -->
-    <script src="/js/page/employee-oop.js"></script>
+    <script src="/js/page/Employee.js"></script>
   </body>
 </html>
