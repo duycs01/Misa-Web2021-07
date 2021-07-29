@@ -1,0 +1,18 @@
+@import url(./commom/Common.css);
+body {
+    font-family: MisaGoogleSans;
+    font-size: 13px;
+    margin: 0;
+  }
+  @font-face {
+    font-family: MisaGoogleSans;
+    src: url(../font/GoogleSans-Regular.otf);
+  }
+  @font-face {
+    font-family: MisaGoogleSans-Bold;
+    src: url(../font/GoogleSans-Bold.otf);
+  }
+  @font-face {
+    font-family: MisaGoogleSans-Medium;
+    src: url(../font/GoogleSans-Medium.otf);
+  }

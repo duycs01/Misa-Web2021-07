@@ -1,0 +1,169 @@
+:root {
+  --primary: #01b075;
+  --hover: #2fbe8e;
+  --default: #019160;
+  --focus: #ebf9f4;
+  --color-red: #f65454;
+  --color-pink: #ffebeb;
+  --color-blue: #0075ff;
+  --color-blue-sky: #ebf4ff;
+  --color-orange: #ff6900;
+  --color-orange-pink: #fff3eb;
+  --color-black: #000000;
+  --color-gray-1: #454545;
+  --color-gray-2: #bbbbbb;
+  --color-gray-3: #e5e5e5;
+  --color-gray-4: #e9ebee;
+}
+.border-primary {
+  border: 1px solid var(--primary);
+}
+.border-default {
+  border: 1px solid var(--default);
+}
+.border-red {
+  border: 1px solid var(--red);
+}
+.text-primary {
+  color: var(--primary);
+}
+.text-primary:hover {
+  color: var(--hover);
+}
+.text-default {
+  color: var(--default);
+}
+.text-default:hover {
+  color: var(--hover);
+}
+.text-primary:focus,
+.text-default:focus {
+  color: var(--focus);
+}
+.text-red {
+  color: var(--color-red);
+}
+.text-red:hover {
+  color: var(--color-pink);
+}
+.text-blue {
+  color: var(--color-blue);
+}
+.text-blue:hover {
+  color: var(--color-blue-sky);
+}
+.text-orange {
+  color: var(--color-orange);
+}
+.text-orange:hover {
+  color: var(--color-orange-pink);
+}
+.text-black {
+  color: var(--color-black);
+}
+.text-gray-1 {
+  color: var(--color-gray-1);
+}
+.text-gray-2 {
+  color: var(--color-gray-2);
+}
+.text-gray-3 {
+  color: var(--color-gray-3);
+}
+.text-gray-4 {
+  color: var(--color-gray)-4;
+}
+
+.bg-primary {
+  background: var(--primary);
+}
+.bg-primary:hover {
+  background: var(--hover);
+}
+.bg-default {
+  background: var(--default);
+}
+.bg-default:hover {
+  background: var(--hover);
+}
+.bg-primary:focus,
+.bg-default:focus {
+  background: var(--focus);
+}
+.bg-red {
+  background: var(--color-red);
+}
+.bg-red:hover {
+  background: var(--color-pink);
+}
+.bg-blue {
+  background: var(--color-blue);
+}
+.bg-blue:hover {
+  background: var(--color-blue-sky);
+}
+.bg-orange {
+  background: var(--color-orange);
+}
+.bg-orange:hover {
+  background: var(--color-orange-pink);
+}
+.bg-black {
+  background: var(--color-black);
+}
+.bg-gray-1 {
+  background: var(--color-gray-1);
+}
+.bg-gray-2 {
+  background: var(--color-gray-2);
+}
+.bg-gray-3 {
+  background: var(--color-gray-3);
+}
+.bg-gray-4 {
+  background: var(--color-gray)-4;
+}
+
+.text-center {
+  text-align: center !important;
+}
+.text-right {
+  text-align: right !important;
+}
+.text-left {
+  text-align: left !important;
+}
+.active {
+  background: #019160 !important;
+  color: #fff;
+}
+.active i {
+  color: #fff;
+}
+.block {
+  display: block !important;
+}
+.hidden {
+  display: none !important;
+}
+.flex {
+  display: flex !important;
+}
+.px-4 {
+  padding: 0 16px !important;
+}
+.py-4 {
+  padding: 16px 0 !important;
+}
+.px-6 {
+  padding: 0 24px !important;
+}
+.py-6 {
+  padding: 24px 0 !important;
+}
+.gap-4 {
+  gap: 16px !important;
+}
+.rotate-180 {
+  transform: rotate(180deg);
+}
