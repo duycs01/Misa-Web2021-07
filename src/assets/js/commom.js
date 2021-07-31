@@ -5,10 +5,7 @@ class Common {
      * Hàm định dạng tiền tệ
      * Create by: nvduy(20/7/2021)
      */
-    static fomatMoney(num, col) {
-        if (col) {
-            col.style = "text-align:right;";
-        }
+    formatMoney(num) {
         if (num) {
             return num.toLocaleString("de-DE");
         }
@@ -18,10 +15,7 @@ class Common {
      * Hàm sử lí định dạng ngày tháng
      * Create by: nvduy(20/7/2021)
      */
-    static fomatDate(dateTime, col) {
-        if (col) {
-            col.style = "text-align:center;";
-        }
+    formatDate(dateTime) {
         if (dateTime !== null) {
             var dateString = "";
             var newDate = new Date(dateTime);
@@ -43,7 +37,7 @@ class Common {
      * Hàm sử lí định dạng ngày tháng
      * Create by: nvduy(20/7/2021)
      */
-    static fomatDateForm(dateTime) {
+    formatDateForm(dateTime) {
         if (dateTime !== null) {
             var dateString = "";
             var newDate = new Date(dateTime);
@@ -64,7 +58,7 @@ class Common {
      * Hàm sử lí trạng thái làm việc
      * Create by: nvduy(20/7/2021)
      */
-    static fomatWorkStatusToName(status) {
+    formatWorkStatusToName(status) {
         if (status)
             switch (status) {
                 case 1:
@@ -80,10 +74,7 @@ class Common {
      * Hàm sử lí giới tính
      * Create by: nvduy(20/7/2021)
      */
-    static fomatGenderToName(gender, col) {
-        if (col) {
-            col.style = "text-align:center";
-        }
+    formatGenderToName(gender) {
         switch (gender) {
             case 0:
                 return "Nữ";
@@ -99,7 +90,7 @@ class Common {
      * Hàm bắt sự kiện tab kiểm tra tất cả input required
      * Create by: nvduy(20/7/2021)
      */
-    static checkInputRequiredBlur() {
+    checkInputRequiredBlur() {
         let me = this;
         var inputRequireds = document.querySelectorAll("input[required]");
 
@@ -115,7 +106,7 @@ class Common {
      * Hàm kiểm tra tất cả input required
      * Create by: nvduy(20/7/2021)
      */
-    static checkInputRequired() {
+    checkInputRequired() {
         let check = false;
         // tôi nghĩ là do cái này
         var inputRequireds = document.querySelectorAll("input[required]");
@@ -130,7 +121,7 @@ class Common {
      * Hàm hiện thị thông báo input
      * Create by: nvduy(20/7/2021)
      */
-    static alertInput(input, check) {
+    alertInput(input, check) {
         let label = document.querySelector(`label[for="${input.id}"]`);
         if (input.required && input.value == "" && !check) {
             label.setAttribute('data-content', 'Trường này không được để trống!')
@@ -148,7 +139,7 @@ class Common {
         return check;
     }
 
-    static alertInputEmail(input, check) {
+    alertInputEmail(input, check) {
         let label = document.querySelector(`label[for="${input.id}"]`);
 
         if (input.type == 'email' && !check) {
@@ -164,7 +155,7 @@ class Common {
             label.setAttribute('data-content', '')
         }
     }
-    static alertInputPhone(input, check) {
+    alertInputPhone(input, check) {
         let label = document.querySelector(`label[for="${input.id}"]`);
 
         if (input.type == 'text' && !check) {
@@ -184,7 +175,7 @@ class Common {
     /**
      * Hàm kiểm tra định dạng email
      */
-    static validateEmail() {
+    validateEmail() {
         let testInput
         // chỗ này tôi lấy những thằng có type là email
         var inputEmail = document.querySelector("input[type=email]");
@@ -198,7 +189,7 @@ class Common {
         return testInput
     }
 
-    static validatePhone() {
+    validatePhone() {
         let testInput = false
         var inputPhone = document.querySelector("input[type=phone]");
         inputPhone.addEventListener("blur", function () {

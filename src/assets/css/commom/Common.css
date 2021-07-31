@@ -16,112 +16,117 @@
   --color-gray-4: #e9ebee;
 }
 .border-primary {
-  border: 1px solid var(--primary);
+  border: 1px solid var(--primary) !important;
 }
 .border-default {
-  border: 1px solid var(--default);
+  border: 1px solid var(--default) !important;
 }
 .border-red {
-  border: 1px solid var(--red);
+  border: 1px solid var(--red) !important;
 }
 .text-primary {
-  color: var(--primary);
+  color: var(--primary) !important;
 }
 .text-primary:hover {
-  color: var(--hover);
+  color: var(--hover) !important;
 }
 .text-default {
-  color: var(--default);
+  color: var(--default) !important;
 }
 .text-default:hover {
-  color: var(--hover);
+  color: var(--hover) !important;
 }
 .text-primary:focus,
 .text-default:focus {
-  color: var(--focus);
+  color: var(--focus) !important;
 }
 .text-red {
-  color: var(--color-red);
+  color: var(--color-red) !important;
 }
 .text-red:hover {
-  color: var(--color-pink);
+  color: var(--color-pink) !important;
 }
 .text-blue {
-  color: var(--color-blue);
+  color: var(--color-blue) !important;
 }
 .text-blue:hover {
-  color: var(--color-blue-sky);
+  color: var(--color-blue-sky) !important;
 }
 .text-orange {
-  color: var(--color-orange);
+  color: var(--color-orange) !important;
 }
 .text-orange:hover {
-  color: var(--color-orange-pink);
+  color: var(--color-orange-pink) !important;
 }
 .text-black {
-  color: var(--color-black);
+  color: var(--color-black) !important;
 }
 .text-gray-1 {
-  color: var(--color-gray-1);
+  color: var(--color-gray-1) !important;
 }
 .text-gray-2 {
-  color: var(--color-gray-2);
+  color: var(--color-gray-2) !important;
 }
 .text-gray-3 {
-  color: var(--color-gray-3);
+  color: var(--color-gray-3) !important;
 }
 .text-gray-4 {
-  color: var(--color-gray)-4;
+  color: var(--color-gray-4) !important;
 }
-
+.pl-12 {
+  padding-left: 40px !important;
+}
 .bg-primary {
-  background: var(--primary);
+  background: var(--primary) !important;
 }
 .bg-primary:hover {
-  background: var(--hover);
+  background: var(--hover) !important;
 }
 .bg-default {
-  background: var(--default);
+  background: var(--default) !important;
 }
 .bg-default:hover {
-  background: var(--hover);
+  background: var(--hover) !important;
 }
 .bg-primary:focus,
 .bg-default:focus {
-  background: var(--focus);
+  background: var(--focus) !important;
 }
 .bg-red {
-  background: var(--color-red);
+  background: var(--color-red) !important;
 }
 .bg-red:hover {
-  background: var(--color-pink);
+  background: var(--color-pink) !important;
 }
 .bg-blue {
-  background: var(--color-blue);
+  background: var(--color-blue) !important;
 }
 .bg-blue:hover {
-  background: var(--color-blue-sky);
+  background: var(--color-blue-sky) !important;
 }
 .bg-orange {
-  background: var(--color-orange);
+  background: var(--color-orange) !important;
 }
 .bg-orange:hover {
-  background: var(--color-orange-pink);
+  background: var(--color-orange-pink) !important;
 }
 .bg-black {
-  background: var(--color-black);
+  background: var(--color-black) !important;
 }
 .bg-gray-1 {
-  background: var(--color-gray-1);
+  background: var(--color-gray-1) !important;
 }
 .bg-gray-2 {
-  background: var(--color-gray-2);
+  background: var(--color-gray-2) !important;
 }
 .bg-gray-3 {
-  background: var(--color-gray-3);
+  background: var(--color-gray-3) !important;
 }
 .bg-gray-4 {
-  background: var(--color-gray)-4;
+  background: var(--color-gray)-4 !important;
+}
+.bg-gray-4:hover {
+  background: var(--color-gray-3) !important;
 }
 
 .text-center {
@@ -149,6 +154,36 @@
 .flex {
   display: flex !important;
 }
+.p-0 {
+  padding: 0 !important;
+}
+.m-0 {
+  margin: 0 !important;
+}
+.mr-4 {
+  margin-right: 16px !important;
+}
+.ml-4 {
+  margin-left: 16px 0 !important;
+}
+.mt-4 {
+  margin-top: 16px !important;
+}
+.mb-4 {
+  margin-bottom: 16px !important;
+}
+.mr-6 {
+  margin-right: 24px !important;
+}
+.ml-6 {
+  margin-left: 24px 0 !important;
+}
+.mt-6 {
+  margin-top: 24px !important;
+}
+.mb-6 {
+  margin-bottom: 24px !important;
+}
 .px-4 {
   padding: 0 16px !important;
 }
@@ -163,6 +198,15 @@
 }
 .gap-4 {
   gap: 16px !important;
+}
+.ml-auto {
+  margin-left: auto !important;
+}
+.mr-auto {
+  margin-right: auto !important;
+}
+.mx-auto {
+  margin: 0 auto !important;
 }
 .rotate-180 {
   transform: rotate(180deg);

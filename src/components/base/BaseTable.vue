@@ -1,64 +1,96 @@
 <template>
   <div class="table">
-    <table id="table-employee">
-      <thead id="table-title">
-        <tr prop-id="EmployeeId">
+    <table>
+      <thead>
+        <tr>
+          <th class="text-center">#</th>
           <th
-            prop-name="#"
-            class="text-center"
-          >#</th>
-          <th prop-name="EmployeeCode">Mã nhân viên</th>
-          <th prop-name="FullName">Họ và tên</th>
-          <th
-            class="text-center"
-            prop-name="Gender"
-          >Giới tính</th>
-          <th
-            class="text-center"
-            prop-name="DateOfBirth"
-          >Ngày sinh</th>
-          <th
-            class="text-center"
-            prop-name="PhoneNumber"
-          >Điện thoại</th>
-          <th prop-name="Email">Email</th>
-          <th prop-name="DepartmentName">Chức vụ</th>
-          <th prop-name="PositionName">Phòng ban</th>
-          <th prop-name="Salary">Mức lương cơ bản</th>
-          <th prop-name="WorkStatus">Tình trạng công việc</th>
+            v-for="(item) in headTable"
+            :key="item.name"
+            :value="item.value"
+            :format="item.format"
+            :class="item.className? item.className:'text-left'"
+          >{{item.name}}</th>
         </tr>
       </thead>
-      <tbody id="table-body">
+      <tbody>
         <tr
-          v-for="item in data"
-          :key="item.EmployeeId"
-          :value="item.EmployeeId"
+          v-for="(row,index) in dataTable"
+          :key="index"
+          :value="row.idTable"
+          @dblclick="$emit('clickRow', row.idTable)"
         >
           <td>
-            <div class="check-box"><input type="checkbox"><span class="checkmark"></span></div>
+            <base-check-box @change.native="$emit(`checked`,row.EmployeeId)" />
           </td>
-          <td>{{item.EmployeeCode}}</td>
-          <td>{{item.FullName}}</td>
-          <td style="text-align: center;">{{item.Gender}}</td>
-          <td style="text-align: center;">{{item.DateOfBirth}}</td>
-          <td>{{item.PhoneNumber}}</td>
-          <td>{{item.Email}}</td>
-          <td>{{item.PositionName}}</td>
-          <td>{{item.DepartmentName}}</td>
-          <td style="text-align: right;">{{item.Salary}}</td>
-          <td>{{item.WorkStatus}}</td>
+          <td
+            v-for="(item, index) in rowsTable(row)"
+            :key="index"
+            :class="item.className"
+          >{{formatValue(item)}}
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
 <script>
+import Common from "../../assets/js/commom.js";
+import BaseCheckBox from "./BaseCheckBox.vue";
 export default {
+  components: { BaseCheckBox },
   props: {
-    data: Array
+    headTable: {
+      type: Array,
+      require
+    },
+    dataTable: {
+      type: Array,
+      require
+    },
+    idTable: {
+      type: String,
+      require
+    }
+  },
+  component: {
+    BaseCheckBox
+  },
+  methods: {
+    /**
+     * Hàm lấy dữ liệu của row theo head table
+     */
+    rowsTable(row) {
+      let listValue = [];
+      let valueItem;
+      this.headTable.forEach(item => {
+        valueItem = {
+          value: item.value,
+          name: row[item.value],
+          className: item.className
+        };
+        listValue.push(valueItem);
+      });
+      return listValue;
+    },
+
+    /**
+     * Hàm format dữ liệu theo định dạng
+     */
+    formatValue(item) {
+      switch (item.value) {
+        case "DateOfBirth":
+          return Common.formatDate(item.name);
+        case "Salary":
+          return Common.formatMoney(item.name);
+        case "Gender":
+          return Common.formatGenderToName(item.name);
+        case "WorkStatus":
+          return Common.formatWorkStatusToName(item.name);
+        default:
+          return item.name;
+      }
+    }
   }
 };
 </script>
-<style scoped>
-@import url("../../assets/css/base/Table.css");
-</style>

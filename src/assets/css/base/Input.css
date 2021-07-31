@@ -1,0 +1,43 @@
+.input-group {
+  border-radius: 5px;
+  height: 40px;
+  font-size: 12px;
+  color: #bbbbbb;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+.label {
+  display: block;
+  margin-bottom: 4px;
+}
+.label .required > i {
+  color: red;
+  font-style: normal;
+}
+.input-group .input {
+  position: absolute;
+  border: none;
+  height: 100%;
+  width: 100%;
+  padding: 0 16px;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid #dbdeff;
+  box-sizing: border-box;
+}
+.input-group .input:focus::placeholder {
+  color: transparent;
+}
+.input-group .input:focus {
+  border-color: #019160;
+}
+.input-group .icon {
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  padding-left: 16px;
+  padding-right: 8px;
+}

@@ -3,53 +3,50 @@
     <div class="title">
       <div class="name-table">Danh sách nhân viên</div>
       <div class="flex gap-4">
-        <BaseButton
-          :text="'Thêm nhân viên'"
-          :iconLeft="true"
-        >
-          <template v-slot:icon>
-            <img
-              src="../../assets/icon/add.png"
-              alt="add"
-            />
-          </template>
-        </BaseButton>
-        <BaseButton
+        <base-button
+          :id="`btn-delete`"
           :text="'Xóa nhân viên'"
           :iconLeft="true"
           class="bg-red"
+          v-if="showDelete"
+          @click.native="openPopupDelete = true"
         >
-          <template v-slot:icon>
-            <i class="fas fa-trash-alt"></i>
-          </template>
-        </BaseButton>
+          <i class="fas fa-trash-alt"></i>
+        </base-button>
+        <base-button
+          :id="`btn-add`"
+          :text="'Thêm nhân viên'"
+          :iconLeft="true"
+          @click.native="openDetail()"
+        >
+          <img
+            src="../../assets/icon/add.png"
+            alt="add"
+          />
+        </base-button>
       </div>
     </div>
     <div class="control">
-      <div class="search input-icon">
-        <label
-          for="search"
-          class="icon"
-        >
+      <base-input
+        icon
+        :id="`txtSeach`"
+        :placeholder="`Tìm kiếm theo mã, tên hoặc số điện thoại`"
+        style="width:320px;"
+      >
+        <template v-slot:icon>
           <img
-            src="/content/icon/search.png"
+            src="../../assets/icon/search.png"
             alt="search"
           />
-        </label>
-        <input
-          id="search"
-          type="search"
-          class="input"
-          placeholder="Tìm kiếm theo mã, tên hoặc số điện thoại"
-          tabindex="0"
-        />
-      </div>
+        </template>
+
+      </base-input>
       <div class="filter-department">
-        <BaseDropdown
+        <base-dropdown
           :selected="departments.select"
           :value="departments.value"
         >
-          <ItemDropdown
+          <base-dropdown-option
             v-for="item in departments.data"
             :key="item.DepartmentId"
             :class="departments.value==item.DepartmentId?'active':''"
@@ -57,22 +54,22 @@
             :option="item.DepartmentName"
             @click.native="checkedItem({departments:item})"
           >
-          </ItemDropdown>
-          <ItemDropdown
+          </base-dropdown-option>
+          <base-dropdown-option
             :class="departments.value=='0'?'active':''"
             :value="'0'"
             :option="'Tất cả phòng ban'"
             @click.native="checkedItem({departments:''})"
           >
-          </ItemDropdown>
-        </BaseDropdown>
+          </base-dropdown-option>
+        </base-dropdown>
       </div>
       <div class="filter-employeePositon">
-        <BaseDropdown
+        <base-dropdown
           :selected="positions.select"
           :value="positions.value"
         >
-          <ItemDropdown
+          <base-dropdown-option
             v-for="item in positions.data"
             :key="item.PositionId"
             :class="positions.value==item.PositionId? 'active':''"
@@ -80,49 +77,73 @@
             :option="item.PositionName"
             @click.native="checkedItem({positions:item})"
           >
-          </ItemDropdown>
-          <ItemDropdown
+          </base-dropdown-option>
+          <base-dropdown-option
             :class="positions.value=='0'? 'active':''"
             :value="'0'"
             :option="'Tất cả vị trí'"
             @click.native="checkedItem({positions:''})"
           >
-          </ItemDropdown>
-        </BaseDropdown>
+          </base-dropdown-option>
+        </base-dropdown>
       </div>
-      <button
+      <base-button
+        :id="`btn-refresh`"
+        :iconLeft="true"
         class="btn-refresh"
-        id="btn-refresh"
       >
         <img
-          src="/content/icon/refresh.png"
+          src="../../assets/icon/refresh.png"
           alt="refresh"
-        />
-      </button>
+        >
+      </base-button>
     </div>
-    <Table :data="employees.data" />
-
+    <base-table
+      :idTable='employees.idTable'
+      :headTable="employees.headTable"
+      :dataTable="employees.data"
+      @clickRow="clickRowOpenDetail"
+      @checked="showBtnDelete"
+    />
     <Pagination />
-
+    <EmployeeDetail
+      v-if="open"
+      :formData="formData"
+      @closeDetail="closeDetail()"
+    />
+    <BasePopup
+      v-if="openPopupDelete"
+      @closePopup="closePopup"
+      @cancelPopup="closePopup"
+      @deletePopup="deleteItem"
+    />
   </div>
 </template>
 <script>
 import BaseButton from "../../components/base/BaseButton.vue";
-import BaseDropdown from "../../components/base/baseDropdown/BaseDropdown.vue";
-import Table from "../../components/base/BaseTable.vue";
-import ItemDropdown from "../../components/base/baseDropdown/ItemDropdown.vue";
+import {
+  BaseDropdown,
+  BaseDropdownOption
+} from "../../components/base/baseDropdown/ExportBaseDropdown";
 import EmployeesAPI from "../../apis/components/EmployeesAPI";
 import PositionsAPI from "../../apis/components/PositionsAPI";
 import DepartmentsAPI from "../../apis/components/DepartmentsAPI";
 import Pagination from "../../components/base/BasePagination.vue";
+import BaseInput from "../../components/base/BaseInput.vue";
+import EmployeeDetail from "./EmployeeDetail.vue";
+import BaseTable from "../../components/base/BaseTable.vue";
+import BasePopup from "../../components/base/BasePopupWarning.vue";
 
 export default {
   components: {
-    BaseButton,
     BaseDropdown,
-    ItemDropdown,
-    Table,
-    Pagination
+    BaseDropdownOption,
+    BaseButton,
+    Pagination,
+    BaseInput,
+    EmployeeDetail,
+    BaseTable,
+    BasePopup
   },
   created() {
     /**
@@ -161,7 +182,71 @@ export default {
   data() {
     return {
       employees: {
-        data: []
+        tableId: "EmployeeId",
+        data: [],
+        headTable: [
+          {
+            name: "Mã Nhân Viên",
+            value: "EmployeeCode",
+            className: "text-left",
+            format: "text"
+          },
+          {
+            name: "Họ và tên",
+            value: "FullName",
+            className: "text-left",
+            format: "text"
+          },
+          {
+            name: "Giới tính",
+            value: "Gender",
+            className: "text-center",
+            format: "formatGender"
+          },
+          {
+            name: "Email",
+            value: "Email",
+            className: "text-left",
+            format: "text"
+          },
+          {
+            name: "Ngày sinh",
+            value: "DateOfBirth",
+            className: "text-center",
+            format: "formatDate"
+          },
+
+          {
+            name: "Điện thoại",
+            value: "PhoneNumber",
+            className: "text-center",
+            format: "text"
+          },
+          {
+            name: "Chức vụ",
+            value: "PositionName",
+            className: "text-left",
+            format: "text"
+          },
+          {
+            name: "Phòng ban",
+            value: "DepartmentName",
+            className: "text-left",
+            format: "text"
+          },
+          {
+            name: "Mức lương",
+            value: "Salary",
+            className: "text-right",
+            format: "formatMoney"
+          },
+          {
+            name: "Tình trạng công việc",
+            value: "WorkStatus",
+            className: "text-left",
+            format: "formatWorkStatus"
+          }
+        ]
       },
       positions: {
         data: [],
@@ -172,7 +257,11 @@ export default {
         data: [],
         select: "Tất cả phòng ban",
         value: "0"
-      }
+      },
+      open: false,
+      formData: {},
+      showDelete: false,
+      openPopupDelete: false
     };
   },
   methods: {
@@ -185,7 +274,6 @@ export default {
           this.positions.select = item.positions.PositionName;
           this.positions.value = item.positions.PositionId;
         } else {
-          console.log("alo", item.positions);
           this.positions.select = "Tất cả vị trí";
           this.positions.value = "0";
         }
@@ -199,10 +287,47 @@ export default {
           this.departments.value = "0";
         }
       }
+    },
+    // Hàm sử lí mở poppup detail
+    openDetail() {
+      this.open = true;
+      this.formData = {};
+    },
+    closeDetail() {
+      this.open = false;
+    },
+    clickRowOpenDetail(row) {
+      // console.log("row", row); // lấy được row mà k cần call api
+      // Lấy dữ liệu bằng api
+      EmployeesAPI.getDataById(row.EmployeeId)
+        .then(res => {
+          this.formData = res.data;
+          console.log("open form", this.formData);
+          this.open = true;
+        })
+        .catch(err => {
+          err;
+        });
+    },
+    showBtnDelete(e) {
+      console.log(e);
+      this.showDelete = true;
+    },
+    deleteItem() {
+      let inputChecked = document.querySelectorAll("input[type=checkbox]");
+      for (let i = 0; i < inputChecked.length; i++) {
+        if (inputChecked[i].checked) {
+          let parentInput = inputChecked[i].parentNode.parentNode.parentNode;
+          let valueOfRow = parentInput.getAttribute("value");
+          EmployeesAPI.deleteDataById(valueOfRow);
+          this.openPopupDeleted = false;
+        }
+      }
     }
   }
 };
 </script>
 <style scoped>
 @import url("../../assets/css/layout/TheContent.css");
+@import url("../../assets/css/base/Table.css");
 </style>

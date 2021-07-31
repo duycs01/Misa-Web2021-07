@@ -13,6 +13,13 @@ export default class BaseAPI {
     }
 
     /**
+       * Hàm lấy chi tiết dữ liệu theo id
+       */
+    getDataById(id) {
+        return baseAPIConfig.get(`${this.controller}/${id}`)
+    }
+
+    /**
     * Hàm sửa dữ liệu
     */
     insertDataById(id, body) {

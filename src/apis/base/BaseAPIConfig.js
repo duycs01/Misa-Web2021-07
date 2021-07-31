@@ -7,5 +7,4 @@ let baseAPIConfig = axios.create({
     baseURL: APIConfig,
     headers: { 'Content-type': 'application/json' }
 })
-console.log('alo', process.env.BASE_URL);
 export default baseAPIConfig
