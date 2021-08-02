@@ -5,7 +5,6 @@
     </span>
   </div>
 </template>
-
 <style scoped>
 @import url("../../assets/css/base/Checkbox.css");
 </style>

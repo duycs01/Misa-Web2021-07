@@ -22,15 +22,15 @@ export default class BaseAPI {
     /**
     * Hàm sửa dữ liệu
     */
-    insertDataById(id, body) {
-        return baseAPIConfig.post(`${this.controller}/${id}`, body)
+    insertData(body) {
+        return baseAPIConfig.post(`${this.controller}`, body)
     }
 
     /**
      * Hàm sửa dữ liệu
      */
-    updateDataById(id) {
-        return baseAPIConfig.put(`${this.controller}/${id}`)
+    updateDataById(id, body) {
+        return baseAPIConfig.put(`${this.controller}/${id}`, body)
     }
 
     /**

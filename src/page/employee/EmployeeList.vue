@@ -8,8 +8,8 @@
           :text="'Xóa nhân viên'"
           :iconLeft="true"
           class="bg-red"
-          v-if="showDelete"
           @click.native="openPopupDelete = true"
+          v-if="listDeleteId.length"
         >
           <i class="fas fa-trash-alt"></i>
         </base-button>
@@ -19,33 +19,23 @@
           :iconLeft="true"
           @click.native="openDetail()"
         >
-          <img
-            src="../../assets/icon/add.png"
-            alt="add"
-          />
+          <img src="../../assets/icon/add.png" alt="add" />
         </base-button>
       </div>
     </div>
     <div class="control">
       <base-input
-        icon
+        :iconLeft="true"
         :id="`txtSeach`"
         :placeholder="`Tìm kiếm theo mã, tên hoặc số điện thoại`"
         style="width:320px;"
       >
         <template v-slot:icon>
-          <img
-            src="../../assets/icon/search.png"
-            alt="search"
-          />
+          <img src="../../assets/icon/search.png" alt="search" />
         </template>
-
       </base-input>
       <div class="filter-department">
-        <base-dropdown
-          :selected="departments.select"
-          :value="departments.value"
-        >
+        <base-dropdown :selected="departments.select" :value="departments.value">
           <base-dropdown-option
             v-for="item in departments.data"
             :key="item.DepartmentId"
@@ -53,22 +43,17 @@
             :value="item.DepartmentId"
             :option="item.DepartmentName"
             @click.native="checkedItem({departments:item})"
-          >
-          </base-dropdown-option>
+          ></base-dropdown-option>
           <base-dropdown-option
             :class="departments.value=='0'?'active':''"
             :value="'0'"
             :option="'Tất cả phòng ban'"
             @click.native="checkedItem({departments:''})"
-          >
-          </base-dropdown-option>
+          ></base-dropdown-option>
         </base-dropdown>
       </div>
       <div class="filter-employeePositon">
-        <base-dropdown
-          :selected="positions.select"
-          :value="positions.value"
-        >
+        <base-dropdown :selected="positions.select" :value="positions.value">
           <base-dropdown-option
             v-for="item in positions.data"
             :key="item.PositionId"
@@ -76,51 +61,44 @@
             :value="item.PositionId"
             :option="item.PositionName"
             @click.native="checkedItem({positions:item})"
-          >
-          </base-dropdown-option>
+          ></base-dropdown-option>
           <base-dropdown-option
             :class="positions.value=='0'? 'active':''"
             :value="'0'"
             :option="'Tất cả vị trí'"
             @click.native="checkedItem({positions:''})"
-          >
-          </base-dropdown-option>
+          ></base-dropdown-option>
         </base-dropdown>
       </div>
-      <base-button
-        :id="`btn-refresh`"
-        :iconLeft="true"
-        class="btn-refresh"
-      >
-        <img
-          src="../../assets/icon/refresh.png"
-          alt="refresh"
-        >
+      <base-button :id="`btn-refresh`" :iconLeft="true" class="btn-refresh">
+        <img src="../../assets/icon/refresh.png" alt="refresh" />
       </base-button>
     </div>
     <base-table
-      :idTable='employees.idTable'
+      v-if="employees.data.length"
+      :tableId="employees.tableId"
       :headTable="employees.headTable"
       :dataTable="employees.data"
       @clickRow="clickRowOpenDetail"
-      @checked="showBtnDelete"
+      @checked="rowChecked"
     />
     <Pagination />
     <EmployeeDetail
-      v-if="open"
+      v-if="open==true"
       :formData="formData"
-      @closeDetail="closeDetail()"
+      @closeDetail="closeDetail"
+      @saveDetail="saveEmployee"
     />
     <BasePopup
       v-if="openPopupDelete"
-      @closePopup="closePopup"
-      @cancelPopup="closePopup"
-      @deletePopup="deleteItem"
+      @closePopup="openPopupDelete=false"
+      @cancelPopup="openPopupDelete=false"
+      @deletePopup="deleteEmployee"
     />
   </div>
 </template>
 <script>
-import BaseButton from "../../components/base/BaseButton.vue";
+import BaseButton from "../../components/base/BaseButton";
 import {
   BaseDropdown,
   BaseDropdownOption
@@ -133,6 +111,7 @@ import BaseInput from "../../components/base/BaseInput.vue";
 import EmployeeDetail from "./EmployeeDetail.vue";
 import BaseTable from "../../components/base/BaseTable.vue";
 import BasePopup from "../../components/base/BasePopupWarning.vue";
+import modalEmployee from "../../model/ModelEmployee";
 
 export default {
   components: {
@@ -145,39 +124,10 @@ export default {
     BaseTable,
     BasePopup
   },
-  created() {
-    /**
-     * Gọi api tất cả nhân viên
-     */
-    EmployeesAPI.getAllData()
-      .then(res => {
-        this.employees.data = res.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    /**
-     * Gọi api lấy tất cả vị trí
-     */
-    PositionsAPI.getAllData()
-      .then(res => {
-        this.positions.data = res.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    /**
-     * Gọi api lấy tất cả phòng ban
-     */
-    DepartmentsAPI.getAllData()
-      .then(res => {
-        this.departments.data = res.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  mounted() {
+    this.getAllDataEmployee();
+    this.getAllDataPosition();
+    this.getAllDataDepartment();
   },
   data() {
     return {
@@ -259,12 +209,67 @@ export default {
         value: "0"
       },
       open: false,
-      formData: {},
-      showDelete: false,
-      openPopupDelete: false
+      openPopupDelete: false,
+      listDeleteId: [],
+      formData: modalEmployee,
+      formMode: 0
     };
   },
   methods: {
+    /**
+     * Gọi api tất cả nhân viên
+     */
+    getAllDataEmployee() {
+      let me = this;
+      try {
+        EmployeesAPI.getAllData()
+          .then(res => {
+            me.employees.data = res.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
+     * Gọi api lấy tất cả phòng ban
+     */
+    getAllDataPosition() {
+      let me = this;
+      try {
+        PositionsAPI.getAllData()
+          .then(res => {
+            me.positions.data = res.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
+     * Gọi api lấy tất cả phòng ban
+     */
+    getAllDataDepartment() {
+      let me = this;
+      try {
+        DepartmentsAPI.getAllData()
+          .then(res => {
+            me.departments.data = res.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     /**
      * Hàm sử lí select dropdown
      */
@@ -292,36 +297,125 @@ export default {
     openDetail() {
       this.open = true;
       this.formData = {};
+      this.formMode = 0;
     },
     closeDetail() {
       this.open = false;
     },
     clickRowOpenDetail(row) {
-      // console.log("row", row); // lấy được row mà k cần call api
+      let me = this;
+      console.log("row", row); // lấy được row mà k cần call api
       // Lấy dữ liệu bằng api
       EmployeesAPI.getDataById(row.EmployeeId)
         .then(res => {
+          console.log(res.data);
           this.formData = res.data;
-          console.log("open form", this.formData);
-          this.open = true;
+          console.log("modalEmployee", this.formData);
+          this.formatData();
+          me.open = true;
+          me.formMode = 1;
         })
         .catch(err => {
-          err;
+          console.log(err);
         });
     },
-    showBtnDelete(e) {
-      console.log(e);
-      this.showDelete = true;
+    formatData() {
+      if (this.formData && this.formData.Salary) {
+        this.formData.Salary = this.$common.formatMoney(this.formData.Salary);
+      }
+      if (this.formData && this.formData.DateOfBirth) {
+        this.formData.DateOfBirth = this.$common.formatDateForm(
+          this.formData.DateOfBirth
+        );
+      }
+      if (this.formData && this.formData.IdentityDate) {
+        this.formData.IdentityDate = this.$common.formatDateForm(
+          this.formData.IdentityDate
+        );
+      }
+      if (this.formData && this.formData.JoinDate) {
+        this.formData.JoinDate = this.$common.formatDateForm(
+          this.formData.JoinDate
+        );
+      }
     },
-    deleteItem() {
-      let inputChecked = document.querySelectorAll("input[type=checkbox]");
-      for (let i = 0; i < inputChecked.length; i++) {
-        if (inputChecked[i].checked) {
-          let parentInput = inputChecked[i].parentNode.parentNode.parentNode;
-          let valueOfRow = parentInput.getAttribute("value");
-          EmployeesAPI.deleteDataById(valueOfRow);
-          this.openPopupDeleted = false;
+    // khi checked thì lấy id
+    rowChecked({ e, id }) {
+      if (e.target.checked) {
+        this.listDeleteId.push(id);
+      } else {
+        const index = this.listDeleteId.indexOf(id);
+        if (index > -1) {
+          this.listDeleteId.splice(index, 1);
         }
+      }
+    },
+    /**
+     * Xóa Nhân viên
+     */
+    deleteEmployee() {
+      var me = this;
+      if (me.listDeleteId.length > 0) {
+        Promise.all(
+          me.listDeleteId.forEach(item => {
+            EmployeesAPI.deleteDataById(item);
+          })
+        )
+          .then(res => console.log(res))
+          .catch(err => alert(err, "Đã có lỗi sảy ra"))
+          .finally(
+            alert("Đã xóa xong!"),
+            (me.openPopupDelete = false),
+            EmployeesAPI.getAllData().then(res => {
+              me.employees.data = res.data;
+            })
+          );
+      }
+    },
+
+    /**
+     * Thêm,Sửa Nhân viên
+     */
+    saveEmployee(data) {
+      if (this.formMode == 0) {
+        console.log(data);
+        try {
+          EmployeesAPI.insertData(data)
+            .then(res => {
+              if (res) {
+                console.log(res);
+                alert("Thêm thành công");
+                this.getAllDataEmployee();
+              }
+            })
+            .catch(err => console.log(err));
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (this.formMode == 1) {
+        let id = data.EmployeeId;
+        try {
+          EmployeesAPI.updateDataById(id, data)
+            .then(res => {
+              if (res) {
+                alert("Sửa thành công");
+                this.getAllDataEmployee();
+              }
+            })
+            .catch(err => console.log(err));
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  },
+  watch: {
+    employees: {
+      deep: true,
+      handler(newVal, oldVal) {
+        console.log(newVal.data);
+        console.log(oldVal.data);
       }
     }
   }

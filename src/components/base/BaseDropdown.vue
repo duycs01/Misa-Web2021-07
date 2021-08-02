@@ -1,28 +1,12 @@
 <template>
-  <div
-    :tabindex="tabindex"
-    class="dropdown"
-    @blur="open=false"
-  >
-    <div
-      class="select"
-      @click="open = !open"
-      :class="open? 'border-primary':''"
-    >
-      <span
-        class="text"
-        :value="selector.value"
-      >
-        {{selector.name}}</span>
-      <span
-        :class="open? 'rotate-180':''"
-        class="icon"
-      ><i class="fas fa-chevron-down"></i></span>
+  <div :tabindex="tabindex" class="dropdown" @blur="open=false">
+    <div class="select" @click="open = !open" :class="open? 'border-primary':''">
+      <span class="text" :value="selector.value">{{selector.name}}</span>
+      <span :class="open? 'rotate-180':''" class="icon">
+        <i class="fas fa-chevron-down"></i>
+      </span>
     </div>
-    <div
-      v-show="open"
-      class="options"
-    >
+    <div v-show="open" class="options">
       <div
         v-for="item in options"
         :key="item[select.value]"
@@ -31,10 +15,10 @@
         @click="selected(item)"
         :class="selector.value == item[select.value]? 'active': ''"
       >
-        <span class="icon"> <i class="fas fa-check"></i></span>
-        <span class="text">
-          {{item[select.name]}}
+        <span class="icon">
+          <i class="fas fa-check"></i>
         </span>
+        <span class="text">{{item[select.name]}}</span>
       </div>
     </div>
   </div>
@@ -45,10 +29,12 @@ export default {
   props: {
     select: {
       type: Object,
+      default: () => {},
       required: true
     },
     options: {
       type: Array,
+      default: () => {},
       required: true
     },
     optionDefault: {
@@ -69,32 +55,36 @@ export default {
       }
     };
   },
-  beforeMount() {
-    if (this.optionDefault) {
-      this.selector = {
-        name: this.optionDefault.name,
-        value: this.optionDefault.value
-      };
-    }
-  },
   methods: {
+    /**
+     * sự kiện click option item
+     */
     selected(value) {
-      let optionItem = this.options.find(item => {
-        if (item[this.select.value] === value[this.select.value]) {
-          return item;
+      if (this.options && this.select) {
+        let optionItem = this.options.find(item => {
+          if (item[this.select.value] == value[this.select.value]) {
+            return item;
+          }
+        });
+        if (optionItem) {
+          this.selector = {
+            name: optionItem[this.select.name],
+            value: optionItem[this.select.value]
+          };
+          this.$emit("selected", this.selector.value);
         }
-      });
-      this.selector = {
-        name: optionItem[this.select.name],
-        value: optionItem[this.select.value]
-      };
-      this.open = false;
+        this.open = false;
+      }
     }
   },
   watch: {
-    optionDefault: function(newValue, oldValue) {
-      console.log(newValue, oldValue);
-      this.selected(this.optionDefault);
+    optionDefault: {
+      immediate: true,
+      handler(newValue, oldValue) {
+        console.log(newValue, oldValue);
+        if (this.optionDefault && this.select && this.options)
+          this.selected(this.optionDefault);
+      }
     }
   }
 };

@@ -76,6 +76,9 @@
 .pl-12 {
   padding-left: 40px !important;
 }
+.pr-12 {
+  padding-right: 40px !important;
+}
 .bg-primary {
   background: var(--primary) !important;
 }

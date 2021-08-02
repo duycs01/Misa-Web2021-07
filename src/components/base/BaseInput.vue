@@ -1,35 +1,35 @@
 <template>
   <div class="input">
-    <label
-      v-if="label"
-      class="label"
-      :for="id"
-    >{{ label }} <span
-        v-if="required"
-        class="required"
-      >(<i>*</i>)</span></label>
+    <label v-if="label" class="label" :for="id">
+      {{ label }}
+      <span v-if="required" class="required">
+        (
+        <i>*</i>)
+      </span>
+    </label>
     <div class="input-group">
       <input
         :id="id"
         class="input"
         :class="[
-                    {
-                        'pl-12': icon === true
-                    },
-                    classes
+                 {'pl-12': iconLeft === true},
+                 {'pr-12': iconRight === true},
+                 {'border-red':required && value.length<1},
+                 classes,
+
                 ]"
         :type="type"
-        :value="value"
+        v-model="value"
         :placeholder="placeholder"
         @input="$emit('input', $event.target.value)"
         @keydown="$emit('keydown', $event)"
         @blur="$emit('blur', $event)"
         @keyup="$emit('keyup', $event)"
       />
-      <div
-        class="icon"
-        v-if="icon"
-      >
+      <div class="icon-left" v-if="iconLeft">
+        <slot name="icon"></slot>
+      </div>
+      <div class="icon-right" v-if="iconRight">
         <slot name="icon"></slot>
       </div>
     </div>
@@ -56,7 +56,12 @@ export default {
     value: String,
     label: String,
     placeholder: String,
-    icon: {
+    classes: String,
+    iconLeft: {
+      type: Boolean,
+      default: false
+    },
+    iconRight: {
       type: Boolean,
       default: false
     },
@@ -75,16 +80,6 @@ export default {
     },
     setSelectionRange(start, end) {
       this.$refs.input.setSelectionRange(start, end);
-    }
-  },
-
-  computed: {
-    classes() {
-      return {
-        "border-2 focus:border-blue-600 focus:border-blue-600":
-          this.bordered === true,
-        "border bg-gray-200 focus:bg-white": this.bordered === false
-      };
     }
   }
 };

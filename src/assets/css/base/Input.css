@@ -34,10 +34,21 @@
 .input-group .input:focus {
   border-color: #019160;
 }
-.input-group .icon {
+.input-group .icon-left {
+  position: absolute;
+  left: 0;
   z-index: 2;
   width: 16px;
   height: 16px;
   padding-left: 16px;
   padding-right: 8px;
+}
+.input-group .icon-right {
+  position: absolute;
+  right: 6px;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  padding-left: 8px;
+  padding-right: 16px;
 }

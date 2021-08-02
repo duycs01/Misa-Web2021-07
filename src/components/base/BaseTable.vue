@@ -17,25 +17,23 @@
         <tr
           v-for="(row,index) in dataTable"
           :key="index"
-          :value="row.idTable"
-          @dblclick="$emit('clickRow', row.idTable)"
+          :value="row[tableId]"
+          @dblclick="$emit('clickRow', row)"
         >
           <td>
-            <base-check-box @change.native="$emit(`checked`,row.EmployeeId)" />
+            <base-check-box @change.native="$emit('checked',({e:$event,id:row[tableId]}))" />
           </td>
           <td
             v-for="(item, index) in rowsTable(row)"
             :key="index"
             :class="item.className"
-          >{{formatValue(item)}}
-          </td>
+          >{{formatValue(item)}}</td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
 <script>
-import Common from "../../assets/js/commom.js";
 import BaseCheckBox from "./BaseCheckBox.vue";
 export default {
   components: { BaseCheckBox },
@@ -48,7 +46,7 @@ export default {
       type: Array,
       require
     },
-    idTable: {
+    tableId: {
       type: String,
       require
     }
@@ -80,15 +78,25 @@ export default {
     formatValue(item) {
       switch (item.value) {
         case "DateOfBirth":
-          return Common.formatDate(item.name);
+          return this.$common.formatDate(item.name);
         case "Salary":
-          return Common.formatMoney(item.name);
+          return this.$common.formatMoney(item.name);
         case "Gender":
-          return Common.formatGenderToName(item.name);
+          return this.$common.formatGenderToName(item.name);
         case "WorkStatus":
-          return Common.formatWorkStatusToName(item.name);
+          return this.$common.formatWorkStatusToName(item.name);
         default:
           return item.name;
+      }
+    }
+  },
+  watch: {
+    dataTable: {
+      deep: true,
+      handler(newVal, oldValue) {
+        console.log(newVal);
+        console.log(oldValue);
+        this.rowsTable(newVal)
       }
     }
   }
