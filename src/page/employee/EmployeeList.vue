@@ -35,40 +35,22 @@
         </template>
       </base-input>
       <div class="filter-department">
-        <base-dropdown :selected="departments.select" :value="departments.value">
-          <base-dropdown-option
-            v-for="item in departments.data"
-            :key="item.DepartmentId"
-            :class="departments.value==item.DepartmentId?'active':''"
-            :value="item.DepartmentId"
-            :option="item.DepartmentName"
-            @click.native="checkedItem({departments:item})"
-          ></base-dropdown-option>
-          <base-dropdown-option
-            :class="departments.value=='0'?'active':''"
-            :value="'0'"
-            :option="'Tất cả phòng ban'"
-            @click.native="checkedItem({departments:''})"
-          ></base-dropdown-option>
-        </base-dropdown>
+        <BaseDropdown
+          v-if="departments.data.length"
+          :tabindex="13"
+          :select="departments.select"
+          :options="departments.data"
+          :optionDefault="departments.optionDefault"
+        ></BaseDropdown>
       </div>
       <div class="filter-employeePositon">
-        <base-dropdown :selected="positions.select" :value="positions.value">
-          <base-dropdown-option
-            v-for="item in positions.data"
-            :key="item.PositionId"
-            :class="positions.value==item.PositionId? 'active':''"
-            :value="item.PositionId"
-            :option="item.PositionName"
-            @click.native="checkedItem({positions:item})"
-          ></base-dropdown-option>
-          <base-dropdown-option
-            :class="positions.value=='0'? 'active':''"
-            :value="'0'"
-            :option="'Tất cả vị trí'"
-            @click.native="checkedItem({positions:''})"
-          ></base-dropdown-option>
-        </base-dropdown>
+        <BaseDropdown
+          v-if="positions.data.length"
+          :tabindex="13"
+          :select="positions.select"
+          :options="positions.data"
+          :optionDefault="positions.optionDefault"
+        ></BaseDropdown>
       </div>
       <base-button :id="`btn-refresh`" :iconLeft="true" class="btn-refresh">
         <img src="../../assets/icon/refresh.png" alt="refresh" />
@@ -99,10 +81,7 @@
 </template>
 <script>
 import BaseButton from "../../components/base/BaseButton";
-import {
-  BaseDropdown,
-  BaseDropdownOption
-} from "../../components/base/baseDropdown/ExportBaseDropdown";
+import BaseDropdown from "../../components/base/BaseDropdown.vue";
 import EmployeesAPI from "../../apis/components/EmployeesAPI";
 import PositionsAPI from "../../apis/components/PositionsAPI";
 import DepartmentsAPI from "../../apis/components/DepartmentsAPI";
@@ -116,7 +95,6 @@ import modalEmployee from "../../model/ModelEmployee";
 export default {
   components: {
     BaseDropdown,
-    BaseDropdownOption,
     BaseButton,
     Pagination,
     BaseInput,
@@ -198,15 +176,27 @@ export default {
           }
         ]
       },
-      positions: {
-        data: [],
-        select: "Tất cả vị trí",
-        value: "0"
-      },
       departments: {
         data: [],
-        select: "Tất cả phòng ban",
-        value: "0"
+        select: {
+          name: "DepartmentName",
+          value: "DepartmentId"
+        },
+        optionDefault: {
+          DepartmentName: "Tất cả phòng ban",
+          DepartmentId: "0"
+        }
+      },
+      positions: {
+        data: [],
+        select: {
+          name: "PositionName",
+          value: "PositionId"
+        },
+        optionDefault: {
+          PositionName: "Tất cả vị trí",
+          PositionId: "0"
+        }
       },
       open: false,
       openPopupDelete: false,
@@ -243,6 +233,7 @@ export default {
         PositionsAPI.getAllData()
           .then(res => {
             me.positions.data = res.data;
+            me.positions.data.push(me.positions.optionDefault);
           })
           .catch(err => {
             console.log(err);
@@ -261,6 +252,7 @@ export default {
         DepartmentsAPI.getAllData()
           .then(res => {
             me.departments.data = res.data;
+            me.departments.data.push(me.departments.optionDefault);
           })
           .catch(err => {
             console.log(err);
