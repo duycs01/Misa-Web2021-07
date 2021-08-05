@@ -1,5 +1,5 @@
 <template>
-  <div :tabindex="tabindex" class="dropdown" @blur="open=false">
+  <div @blur="open=false" @keyup="nextItem($event)" :tabindex="tabindex" class="dropdown">
     <div class="select" @click="open = !open" :class="open? 'border-primary':''">
       <span class="text" :value="selector.value">{{selector.name}}</span>
       <span :class="open? 'rotate-180':''" class="icon">
@@ -8,7 +8,7 @@
     </div>
     <div v-show="open" class="options">
       <div
-        v-for="item in options"
+        v-for="(item) in options"
         :key="item[select.value]"
         class="option-item"
         :value="item[select.value]"
@@ -42,7 +42,7 @@ export default {
       default: () => {}
     },
     tabindex: {
-      type: Number
+      type: String
     }
   },
 
@@ -75,13 +75,19 @@ export default {
         }
         this.open = false;
       }
+    },
+    nextItem(e) {
+      if (e.keyCode == 38) {
+        console.log("arow up", this.selector);
+      } else if (e.keyCode == 40) {
+        console.log("arow down", this.selector);
+      }
     }
   },
   watch: {
     optionDefault: {
       immediate: true,
-      handler(newValue, oldValue) {
-        console.log(newValue, oldValue);
+      handler() {
         if (this.optionDefault && this.select && this.options)
           this.selected(this.optionDefault);
       }
@@ -89,3 +95,6 @@ export default {
   }
 };
 </script>
+<style scoped>
+@import url("../../assets/css/base/Dropdown.css");
+</style>

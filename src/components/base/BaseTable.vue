@@ -14,12 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(row,index) in dataTable"
-          :key="index"
-          :value="row[tableId]"
-          @dblclick="$emit('clickRow', row)"
-        >
+        <tr v-for="(row,index) in dataTable" :key="index" @dblclick="$emit('clickRow', row)">
           <td>
             <base-check-box @change.native="$emit('checked',({e:$event,id:row[tableId]}))" />
           </td>
@@ -93,10 +88,8 @@ export default {
   watch: {
     dataTable: {
       deep: true,
-      handler(newVal, oldValue) {
-        console.log(newVal);
-        console.log(oldValue);
-        this.rowsTable(newVal)
+      handler(newVal) {
+        this.rowsTable(newVal);
       }
     }
   }

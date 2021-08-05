@@ -1,8 +1,7 @@
 <template>
   <div class="check-box">
-    <input type="checkbox">
-    <span class="checkmark">
-    </span>
+    <input type="checkbox" />
+    <span class="checkmark"></span>
   </div>
 </template>
 <style scoped>

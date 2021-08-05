@@ -1,0 +1,40 @@
+.toast-mess {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  padding: 0 16px;
+  height: 48px;
+  width: 200px;
+  z-index: 10;
+  background: #fff;
+  box-shadow: 0 3px 6px rgb(0, 0, 0, 0.16);
+}
+.toast-mess .content-mess {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #000000;
+}
+.toast-mess .content-mess .icon {
+  font-size: 13px;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  background: #f65454;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.toast-mess .content-mess .icon i {
+  color: #fff;
+}
+.toast-mess .btn-close-toast {
+  background: none;
+  margin-left: auto;
+  outline: none;
+  border: none;
+  color: #f65454;
+}

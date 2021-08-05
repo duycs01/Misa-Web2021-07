@@ -3,6 +3,9 @@
   height: 100%;
   position: relative;
 }
+.dropdown:focus-visible {
+  outline: none;
+}
 .dropdown .select {
   border: 1px solid #dbdeff;
   border-radius: 4px;

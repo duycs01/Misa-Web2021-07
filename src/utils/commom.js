@@ -86,118 +86,71 @@ class Common {
         }
     }
 
-    /**
-     * Hàm bắt sự kiện tab kiểm tra tất cả input required
-     * Create by: nvduy(20/7/2021)
-     */
-    checkInputRequiredBlur() {
-        let me = this;
-        var inputRequireds = document.querySelectorAll("input[required]");
-
-        for (let i = 0; i < inputRequireds.length; i++) {
-            let check = false;
-            inputRequireds[i].addEventListener("blur", function () {
-                me.alertInput(this, check);
-            });
-        }
-    }
 
     /**
-     * Hàm kiểm tra tất cả input required
-     * Create by: nvduy(20/7/2021)
+     * Kiểm tra input và hiện tooltip
      */
-    checkInputRequired() {
-        let check = false;
-        // tôi nghĩ là do cái này
-        var inputRequireds = document.querySelectorAll("input[required]");
-        for (let i = 0; i < inputRequireds.length; i++) {
-            let inputRequired = inputRequireds[i];
-            check = Common.alertInput(inputRequired, check);
+    validateInput(e) {
+        if (e.value == "") {
+            e.parentNode.setAttribute(
+                "data-content",
+                "Trường này không được để trống"
+            );
+            Common.showHideTooltip(e, false)
+            return false
         }
-        return check;
+        else if (e.id == "txtEmail") {
+            let testEmail = Common.validateEmail(e);
+            e.parentNode.setAttribute(
+                "data-content",
+                "Email không đúng định dạng"
+            );
+            return Common.showHideTooltip(e, testEmail)
+        }
+        else if (e.id == "txtPhoneNumber") {
+            let testPhoneNumber = Common.validatePhone(e);
+            e.parentNode.setAttribute(
+                "data-content",
+                "Số điện thoại không đúng định dạng"
+            );
+            return Common.showHideTooltip(e, testPhoneNumber)
+        }
+        else {
+            return Common.showHideTooltip(e, true)
+        }
+
     }
 
     /**
-     * Hàm hiện thị thông báo input
-     * Create by: nvduy(20/7/2021)
+     * Hàm ẩn hiện tooltip
      */
-    alertInput(input, check) {
-        let label = document.querySelector(`label[for="${input.id}"]`);
-        if (input.required && input.value == "" && !check) {
-            label.setAttribute('data-content', 'Trường này không được để trống!')
-            label.classList.add("tooltip-input-required");
-            input.classList.add("border-red");
-            input.focus();
-            check = true;
-        }
-        else {
-            label.classList.remove("tooltip-input-required");
-            input.classList.remove("border-red");
-            label.setAttribute('data-content', '')
+    static showHideTooltip(input, check) {
+        if (!check) {
+            input.classList.add("border-corlor-red");
+            input.parentNode.classList.add("tooltip");
+            return false;
+        } else {
+            input.classList.remove("tooltip");
+            input.parentNode.classList.remove("border-corlor-red");
+            return true;
         }
 
-        return check;
-    }
-
-    alertInputEmail(input, check) {
-        let label = document.querySelector(`label[for="${input.id}"]`);
-
-        if (input.type == 'email' && !check) {
-            label.setAttribute('data-content', 'Email không đúng định dạng!')
-            label.classList.add("tooltip-input-required");
-            input.classList.add("border-red");
-            input.focus();
-            check = true;
-        }
-        else {
-            label.classList.remove("tooltip-input-required");
-            input.classList.remove("border-red");
-            label.setAttribute('data-content', '')
-        }
-    }
-    alertInputPhone(input, check) {
-        let label = document.querySelector(`label[for="${input.id}"]`);
-
-        if (input.type == 'text' && !check) {
-            label.setAttribute('data-content', 'Số điện thoại không đúng định dạng!')
-            label.classList.add("tooltip-input-required");
-            input.classList.add("border-red");
-            input.focus();
-            check = true;
-        }
-        else {
-            label.classList.remove("tooltip-input-required");
-            input.classList.remove("border-red");
-            label.setAttribute('data-content', '')
-        }
     }
 
     /**
      * Hàm kiểm tra định dạng email
      */
-    validateEmail() {
-        let testInput
-        // chỗ này tôi lấy những thằng có type là email
-        var inputEmail = document.querySelector("input[type=email]");
-        inputEmail.addEventListener("blur", function () {
-            let re =
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (inputEmail.value) {
-                testInput = Common.alertInputEmail(inputEmail, re.test(String(inputEmail.value).toLowerCase()));
-            }
-        })
-        return testInput
+    static validateEmail(inputEmail) {
+        let re =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (inputEmail.value) return re.test(String(inputEmail.value).toLowerCase());
     }
-
-    validatePhone() {
-        let testInput = false
-        var inputPhone = document.querySelector("input[type=phone]");
-        inputPhone.addEventListener("blur", function () {
-            var phoneno = /^\d{10}$/;
-            if (!inputPhone.value.match(phoneno)) {
-                return Common.alertInputPhone(inputPhone, testInput);
-            }
-        })
+    /**
+     * Hàm kiểm tra định dạng PhoneNumber
+    */
+    static validatePhone(inputPhone) {
+        let phoneno = /^\d{10}$/;
+        if (inputPhone.value) return inputPhone.value.match(phoneno)
     }
 }
 

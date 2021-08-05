@@ -1,14 +1,14 @@
 <template>
   <div class="modal">
     <div class="modal-content">
-      <Basebutton
+      <BaseButton
         :id="`btn-close`"
         :iconRight="true"
         class="text-black bg-gray-4 ml-auto"
         @click.native="$emit('closeDetail')"
       >
         <i class="fas fa-times"></i>
-      </Basebutton>
+      </BaseButton>
       <form action="#" class="form">
         <div class="form-title">Thông tin nhân viên</div>
         <div class="form-content">
@@ -25,23 +25,32 @@
                 <span class="text">A. Thông tin chung:</span>
               </div>
               <base-input
+                :tabindex="`1`"
                 :label="`Mã nhân viên`"
                 :id="`txtEmployeeCode`"
                 :value="formData.EmployeeCode"
+                @input="(e)=>formData.EmployeeCode=e"
                 required
+                @blur="$common.validateInput"
               ></base-input>
               <base-input
+                :tabindex="`2`"
                 :label="`Họ và tên`"
                 :id="`txtFullName`"
                 :value="formData.FullName"
+                @input="(e)=>formData.FullName=e"
                 required
+                @blur="$common.validateInput"
               ></base-input>
               <base-input
+                :tabindex="`3`"
                 :type="`date`"
                 :label="`Ngày sinh`"
                 :id="`txtDateOfBirth`"
-                :value="formData.DateOfBirth"
+                :value="$common.formatDateForm(formData.DateOfBirth)"
+                @input="(e)=>formData.DateOfBirth=e"
                 required
+                @blur="$common.validateInput"
               ></base-input>
               <div class="input">
                 <div class="label">
@@ -52,38 +61,56 @@
                   </span>
                 </div>
                 <base-dropdown
-                  @selected="selectedGender"
+                  @selected="(e)=>formData.Gender=e"
                   v-if="genders.data.length"
-                  :tabindex="4"
+                  :tabindex="'4'"
                   :select="genders.select"
                   :options="genders.data"
                   :optionDefault="formData"
                 ></base-dropdown>
               </div>
               <base-input
+                :tabindex="`5`"
                 :label="`Số CMTND/ Căn cước`"
                 :id="`txtIdentityNumber`"
                 :value="formData.IdentityNumber"
+                @input="(e)=>formData.IdentityNumber=e"
                 required
+                @blur="$common.validateInput"
               ></base-input>
               <base-input
+                :tabindex="`6`"
                 :type="`date`"
                 :label="`Ngày cấp`"
                 :id="`txtIdentityDate`"
-                :value="formData.IdentityDate"
+                :value="$common.formatDateForm(formData.IdentityDate)"
+                @input="(e)=>formData.IdentityDate=e"
               ></base-input>
               <base-input
+                :tabindex="`7`"
                 class="custom-input"
                 :label="`Nơi cấp`"
                 :id="`txtIdentityPlace`"
                 :value="formData.IdentityPlace"
+                @input="(e)=>formData.IdentityPlace=e"
               ></base-input>
-              <base-input :label="`Email`" :id="`txtEmail`" v-model="formData.Email" required></base-input>
               <base-input
+                :tabindex="`8`"
+                :label="`Email`"
+                :id="`txtEmail`"
+                v-model="formData.Email"
+                required
+                @input="(e)=>formData.Email=e"
+                @blur="$common.validateInput"
+              ></base-input>
+              <base-input
+                :tabindex="`9`"
                 :label="`Số điện thoại`"
                 :id="`txtPhoneNumber`"
                 :value="formData.PhoneNumber"
                 required
+                @input="(e)=>formData.PhoneNumber=e"
+                @blur="$common.validateInput"
               ></base-input>
               <div class="infomation-title">
                 <span class="text">B. Thông tin công việc:</span>
@@ -91,9 +118,9 @@
               <div class="input">
                 <div class="label">Chọn vị trí</div>
                 <BaseDropdown
-                  @selected="selectedPosition"
+                  @selected="(e)=>formData.PositionId=e"
                   v-if="positions.data.length"
-                  :tabindex="12"
+                  :tabindex="`10`"
                   :select="positions.select"
                   :options="positions.data"
                   :optionDefault="formData"
@@ -102,23 +129,27 @@
               <div class="input">
                 <div class="label">Chọn phòng ban</div>
                 <BaseDropdown
-                  @selected="selectedDepartment"
+                  @selected="(e)=>formData.DepartmentId=e"
                   v-if="departments.data.length"
-                  :tabindex="13"
+                  :tabindex="`11`"
                   :select="departments.select"
                   :options="departments.data"
                   :optionDefault="formData"
                 ></BaseDropdown>
               </div>
               <base-input
+                :tabindex="`12`"
                 :label="`Mã số thuế cá nhân`"
                 :id="`txtTaxCode`"
                 :value="formData.PersonalTaxCode"
+                @input="(e)=>formData.PersonalTaxCode=e"
               ></base-input>
               <base-input
+                :tabindex="`13`"
                 :label="`Mức lương cơ bản`"
                 :id="`txtSalary`"
-                :value="formData.Salary"
+                :value="$common.formatMoney(formData.Salary)"
+                @input="formatMoney"
                 :classes="`text-right`"
                 :iconRight="true"
               >
@@ -128,18 +159,22 @@
               </base-input>
 
               <base-input
+                :tabindex="`14`"
                 required
                 :type="`date`"
                 :label="`Ngày gia nhập công ty`"
                 :id="`txtJoinDate`"
-                :value="formData.JoinDate"
+                :value="$common.formatDateForm(formData.JoinDate)"
+                @input="(e)=>formData.JoinDate=e"
+                @blur="$common.validateInput"
               ></base-input>
+
               <div class="input">
                 <div class="label">Chọn phòng ban</div>
                 <BaseDropdown
-                  @selected="selectedWorkStatus"
+                  @selected="(e)=>formData.WorkStatus=e"
                   v-if="workStatus.data.length"
-                  :tabindex="13"
+                  :tabindex="`15`"
                   :select="workStatus.select"
                   :options="workStatus.data"
                   :optionDefault="formData"
@@ -150,36 +185,34 @@
         </div>
       </form>
       <div class="modal-footer">
-        <basebutton
+        <BaseButton
+          tabindex="16"
           :id="`btn-cancel`"
           :text="'Hủy'"
           class="bg-gray-4 text-black"
           @click.native="$emit('closeDetail')"
-        ></basebutton>
-        <basebutton
+        ></BaseButton>
+        <BaseButton
+          tabindex="15"
           :id="`btn-save`"
           :text="'Lưu'"
           :iconLeft="true"
-          @click.native="$emit('saveDetail',formData)"
+          @click.native="saveDetail"
         >
           <i class="far fa-save"></i>
-        </basebutton>
+        </BaseButton>
       </div>
     </div>
   </div>
 </template>
 <script>
 import BaseInput from "../../components/base/BaseInput.vue";
-import Basebutton from "../../components/base/BaseButton.vue";
-import BaseDropdown from "../../components/base/BaseDropdown.vue";
 import PositionsAPI from "../../apis/components/PositionsAPI";
 import DepartmentsAPI from "../../apis/components/DepartmentsAPI";
 
 export default {
   components: {
-    BaseInput,
-    Basebutton,
-    BaseDropdown
+    BaseInput
   },
   props: {
     formData: {
@@ -271,28 +304,29 @@ export default {
   },
   methods: {
     /**
-     * Lấy dữ liệu gender vào model
+     * Format tiền từ text thành số
      */
-    selectedGender(value) {
-      this.formData.Gender = +value;
+    formatMoney(e) {
+      if (e && !Number.isInteger(e)) {
+        this.formData.Salary = +e.replaceAll(".", "");
+        console.log(this.formData.Salary);
+      }
     },
+
     /**
-     * Lấy dữ liệu gender vào model
+     * Kiểm tra lại tất cả input required trước khi emit lên component
+     * created: 28/7/2021
      */
-    selectedDepartment(value) {
-      this.formData.DepartmentId = value;
-    },
-    /**
-     * Lấy dữ liệu gender vào model
-     */
-    selectedPosition(value) {
-      this.formData.PositionId = value;
-    },
-    /**
-     * Lấy dữ liệu gender vào model
-     */
-    selectedWorkStatus(value) {
-      this.formData.WorkStatus = +value;
+    saveDetail() {
+      let check = false;
+      let input = document.querySelectorAll("input[required='required']");
+      input.forEach(e => (check = this.$common.validateInput(e)));
+      if (check) this.$emit("saveDetail", this.formData);
+    }
+  },
+  computed: {
+    formatSalary() {
+      return this.$common.formatMoney(this.formData.Salary);
     }
   }
 };

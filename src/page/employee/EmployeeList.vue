@@ -37,7 +37,7 @@
       <div class="filter-department">
         <BaseDropdown
           v-if="departments.data.length"
-          :tabindex="13"
+          :tabindex="`20`"
           :select="departments.select"
           :options="departments.data"
           :optionDefault="departments.optionDefault"
@@ -46,13 +46,18 @@
       <div class="filter-employeePositon">
         <BaseDropdown
           v-if="positions.data.length"
-          :tabindex="13"
+          :tabindex="`21`"
           :select="positions.select"
           :options="positions.data"
           :optionDefault="positions.optionDefault"
         ></BaseDropdown>
       </div>
-      <base-button :id="`btn-refresh`" :iconLeft="true" class="btn-refresh">
+      <base-button
+        :id="`btn-refresh`"
+        :iconLeft="true"
+        class="btn-refresh"
+        @click="getAllDataEmployee"
+      >
         <img src="../../assets/icon/refresh.png" alt="refresh" />
       </base-button>
     </div>
@@ -74,14 +79,31 @@
     <BasePopup
       v-if="openPopupDelete"
       @closePopup="openPopupDelete=false"
-      @cancelPopup="openPopupDelete=false"
-      @deletePopup="deleteEmployee"
+      :title="`Xóa nhân viên`"
+      :description="`Bạn có muốn xóa nhân viên này không`"
+    >
+      <template v-slot:buttonA>
+        <base-button
+          :id="`btn-cancelPopup`"
+          :text="'Hủy'"
+          class="bg-gray-2"
+          @click.native="openPopupDelete=false"
+        ></base-button>
+      </template>
+      <template v-slot:buttonB>
+        <base-button :id="`btn-delete`" :text="'Xóa'" class="bg-red" @click.native="deleteEmployee"></base-button>
+      </template>
+    </BasePopup>
+    <BaseToastMess
+      v-if="toastMess.open"
+      :status="toastMess.status"
+      :message="toastMess.mess"
+      @closeToast="openToast = false"
     />
+    <BaseLoading v-if="loading" />
   </div>
 </template>
 <script>
-import BaseButton from "../../components/base/BaseButton";
-import BaseDropdown from "../../components/base/BaseDropdown.vue";
 import EmployeesAPI from "../../apis/components/EmployeesAPI";
 import PositionsAPI from "../../apis/components/PositionsAPI";
 import DepartmentsAPI from "../../apis/components/DepartmentsAPI";
@@ -91,16 +113,18 @@ import EmployeeDetail from "./EmployeeDetail.vue";
 import BaseTable from "../../components/base/BaseTable.vue";
 import BasePopup from "../../components/base/BasePopupWarning.vue";
 import modalEmployee from "../../model/ModelEmployee";
+import BaseToastMess from "../../components/base/BaseToastMess.vue";
+import BaseLoading from "../../components/base/BaseLoading.vue";
 
 export default {
   components: {
-    BaseDropdown,
-    BaseButton,
     Pagination,
     BaseInput,
     EmployeeDetail,
     BaseTable,
-    BasePopup
+    BasePopup,
+    BaseToastMess,
+    BaseLoading
   },
   mounted() {
     this.getAllDataEmployee();
@@ -202,7 +226,13 @@ export default {
       openPopupDelete: false,
       listDeleteId: [],
       formData: modalEmployee,
-      formMode: 0
+      formMode: 0,
+      openToast: false,
+      toastMess: {
+        mess: "",
+        status: ""
+      },
+      loading: false
     };
   },
   methods: {
@@ -211,10 +241,12 @@ export default {
      */
     getAllDataEmployee() {
       let me = this;
+      this.loading = true;
       try {
         EmployeesAPI.getAllData()
           .then(res => {
             me.employees.data = res.data;
+            this.showHideToastMess(res.status);
           })
           .catch(err => {
             console.log(err);
@@ -262,75 +294,56 @@ export default {
       }
     },
 
-    /**
-     * Hàm sử lí select dropdown
-     */
-    checkedItem(item) {
-      if (item.positions || item.positions == "") {
-        if (item.positions !== "") {
-          this.positions.select = item.positions.PositionName;
-          this.positions.value = item.positions.PositionId;
-        } else {
-          this.positions.select = "Tất cả vị trí";
-          this.positions.value = "0";
-        }
-      }
-      if (item.departments || item.departments == "") {
-        if (item.departments !== "") {
-          this.departments.select = item.departments.DepartmentName;
-          this.departments.value = item.departments.DepartmentId;
-        } else {
-          this.departments.select = "Tất cả phòng ban";
-          this.departments.value = "0";
-        }
-      }
+    getNewEmployeeCode() {
+      var id = "NewEmployeeCode";
+      EmployeesAPI.getDataById(id)
+        .then(res => {
+          this.formData.EmployeeCode = res.data;
+          this.showHideToastMess(res);
+        })
+        .catch(err => {
+          console.log(err, "Đã có lỗi sảy ra");
+        });
     },
+
+    /**
+     * hàm ẩn hiện toast mess
+     */
+    showHideToastMess(res) {
+      this.openToast = true;
+      this.toastMess.mess = this.$statusCode.checkStatus(res);
+      setTimeout(() => {
+        this.openToast = false;
+      }, 5000);
+    },
+
     // Hàm sử lí mở poppup detail
     openDetail() {
       this.open = true;
       this.formData = {};
+      this.getNewEmployeeCode();
       this.formMode = 0;
     },
+
     closeDetail() {
       this.open = false;
     },
+
     clickRowOpenDetail(row) {
       let me = this;
       console.log("row", row); // lấy được row mà k cần call api
       // Lấy dữ liệu bằng api
       EmployeesAPI.getDataById(row.EmployeeId)
         .then(res => {
-          console.log(res.data);
           this.formData = res.data;
-          console.log("modalEmployee", this.formData);
-          this.formatData();
           me.open = true;
           me.formMode = 1;
         })
         .catch(err => {
-          console.log(err);
+          console.log(err, "Đã có lỗi sảy ra");
         });
     },
-    formatData() {
-      if (this.formData && this.formData.Salary) {
-        this.formData.Salary = this.$common.formatMoney(this.formData.Salary);
-      }
-      if (this.formData && this.formData.DateOfBirth) {
-        this.formData.DateOfBirth = this.$common.formatDateForm(
-          this.formData.DateOfBirth
-        );
-      }
-      if (this.formData && this.formData.IdentityDate) {
-        this.formData.IdentityDate = this.$common.formatDateForm(
-          this.formData.IdentityDate
-        );
-      }
-      if (this.formData && this.formData.JoinDate) {
-        this.formData.JoinDate = this.$common.formatDateForm(
-          this.formData.JoinDate
-        );
-      }
-    },
+
     // khi checked thì lấy id
     rowChecked({ e, id }) {
       if (e.target.checked) {
@@ -342,6 +355,7 @@ export default {
         }
       }
     },
+
     /**
      * Xóa Nhân viên
      */
@@ -349,19 +363,27 @@ export default {
       var me = this;
       if (me.listDeleteId.length > 0) {
         Promise.all(
-          me.listDeleteId.forEach(item => {
-            EmployeesAPI.deleteDataById(item);
-          })
+          me.listDeleteId.map(item => EmployeesAPI.deleteDataById(item))
         )
-          .then(res => console.log(res))
-          .catch(err => alert(err, "Đã có lỗi sảy ra"))
-          .finally(
-            alert("Đã xóa xong!"),
-            (me.openPopupDelete = false),
-            EmployeesAPI.getAllData().then(res => {
-              me.employees.data = res.data;
-            })
-          );
+          .then(res => {
+            this.showHideToastMess(res[0]);
+          })
+          .catch(err => {
+            console.log("Đã có lỗi sảy ra", err);
+          })
+          .finally(() => {
+            me.openPopupDelete = false;
+            this.getAllDataEmployee();
+            this.loading = true;
+
+            let checked = document.querySelectorAll(
+              "input[type='checkbox']:checked"
+            );
+            for (let i in checked) {
+              if (checked[i].checked) checked[i].checked = false;
+            }
+            me.listDeleteId = [];
+          });
       }
     },
 
@@ -375,9 +397,9 @@ export default {
           EmployeesAPI.insertData(data)
             .then(res => {
               if (res) {
-                console.log(res);
-                alert("Thêm thành công");
+                this.loading = true;
                 this.getAllDataEmployee();
+                this.showHideToastMess(res.status);
               }
             })
             .catch(err => console.log(err));
@@ -391,8 +413,10 @@ export default {
           EmployeesAPI.updateDataById(id, data)
             .then(res => {
               if (res) {
-                alert("Sửa thành công");
+                console.log(res);
+                this.loading = true;
                 this.getAllDataEmployee();
+                this.showHideToastMess(res.status);
               }
             })
             .catch(err => console.log(err));
@@ -405,9 +429,8 @@ export default {
   watch: {
     employees: {
       deep: true,
-      handler(newVal, oldVal) {
-        console.log(newVal.data);
-        console.log(oldVal.data);
+      handler() {
+        this.loading = false;
       }
     }
   }

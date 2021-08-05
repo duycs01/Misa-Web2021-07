@@ -9,22 +9,21 @@
     </label>
     <div class="input-group">
       <input
+        :tabindex="tabindex"
         :id="id"
         class="input"
         :class="[
                  {'pl-12': iconLeft === true},
                  {'pr-12': iconRight === true},
-                 {'border-red':required && value.length<1},
                  classes,
 
                 ]"
         :type="type"
-        v-model="value"
+        v-model="inputValue"
         :placeholder="placeholder"
+        :required="required"
         @input="$emit('input', $event.target.value)"
-        @keydown="$emit('keydown', $event)"
-        @blur="$emit('blur', $event)"
-        @keyup="$emit('keyup', $event)"
+        @blur="$emit('blur', $event.target)"
       />
       <div class="icon-left" v-if="iconLeft">
         <slot name="icon"></slot>
@@ -57,6 +56,7 @@ export default {
     label: String,
     placeholder: String,
     classes: String,
+    tabindex: String,
     iconLeft: {
       type: Boolean,
       default: false
@@ -70,7 +70,11 @@ export default {
       default: false
     }
   },
-
+  data() {
+    return {
+      inputValue: this.value
+    };
+  },
   methods: {
     focus() {
       this.$refs.input.focus();
@@ -86,4 +90,6 @@ export default {
 </script>
 <style scoped>
 @import url("../../assets/css/base/Input.css");
+@import url("../../assets/css/base/Tooltip.css");
+
 </style>

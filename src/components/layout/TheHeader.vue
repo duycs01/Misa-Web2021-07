@@ -10,17 +10,18 @@
     </div>
     <div class="header-right">
       <div class="bank">
-        <div class="icon">MB</div>
-        <div class="select-bank">
-          <div class="select">
-            <span class="text">Chi nhánh MISA miền Bắc</span>
-            <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-          </div>
-          <!-- <div class="option"></div> -->
-        </div>
+        <BaseDropdown
+          v-if="BankBranch.data.length"
+          :tabindex="`22`"
+          :select="BankBranch.select"
+          :options="BankBranch.data"
+          :optionDefault="BankBranch.data[0]"
+        ></BaseDropdown>
       </div>
       <div class="user">
-        <div class="bell"><i class="far fa-bell"></i></div>
+        <div class="bell">
+          <i class="far fa-bell"></i>
+        </div>
         <div class="avatar-user">
           <img src="../../assets/icon/avatar-default.png" alt="avatar" />
         </div>
@@ -33,7 +34,36 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      BankBranch: {
+        data: [
+          {
+            BankBranchName: "Chi nhánh MISA miền Bắc",
+            BankBranchId: "MISA-001"
+          },
+          {
+            BankBranchName: "Chi nhánh MISA miền Trung",
+            BankBranchId: "MISA-002"
+          },
+          {
+            BankBranchName: "Chi nhánh MISA miền Nam",
+            BankBranchId: "MISA-003"
+          },
+          {
+            BankBranchName: "Chi nhánh MISA miền Tây",
+            BankBranchId: "MISA-004"
+          }
+        ],
+        select: {
+          name: "BankBranchName",
+          value: "BankBranchId"
+        }
+      }
+    };
+  }
+};
 </script>
 <style scoped>
 @import url("../../assets/css/layout/TheHeader.css");
