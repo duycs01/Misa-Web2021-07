@@ -74,7 +74,7 @@
     />
     <Pagination
       :total-pages="totalPages"
-      :total="totalData"
+      :total="totalRecord"
       :current-page="currentPage"
       @pagechanged="onPageChange"
     >
@@ -82,8 +82,8 @@
         <div class="total text-gray-1">
           Hiển thị
           <strong class="text-black">
-            {{pageSize *(currentPage - 1) + 1}} - {{pageSize * currentPage >totalData?
-            totalData:pageSize * currentPage }}/{{totalData}}
+            {{pageSize *(currentPage - 1) + 1}} - {{pageSize * currentPage >totalRecord?
+            totalRecord:pageSize * currentPage }}/{{totalRecord}}
           </strong> nhân viên
         </div>
       </template>
@@ -320,7 +320,7 @@ export default {
         value: 10
       },
       totalPages: 1,
-      totalData: 0,
+      totalRecord: 0,
       search: ""
     };
   },
@@ -356,7 +356,7 @@ export default {
         .then(res => {
           me.employees.data = res.data.Data;
           me.totalPages = res.data.TotalPage;
-          me.totalData = res.data.TotalRecord;
+          me.totalRecord = res.data.TotalRecord;
 
           if (res) this.loading = false;
         })
@@ -513,6 +513,12 @@ export default {
       }, 5000);
     },
 
+    // checkData(data) {
+    //   if(this.formData = data){
+
+    //   }
+    // },
+
     /**
      * Thêm,Sửa Nhân viên
      * Created by duylv - 28/07/2021
@@ -551,21 +557,21 @@ export default {
      * Theo dõi biến position khi thay đổi
      */
     positionSelected() {
-      this.filterEmployee();
+      this.filterEmployee(1);
     },
 
     /**
      * Theo dõi biến department khi thay đổi
      */
     departmentSelected() {
-      this.filterEmployee();
+      this.filterEmployee(1);
     },
 
     /**
      * Theo dõi biến khi pageSize  khi thay đổi
      */
     pageSize() {
-      this.filterEmployee();
+      this.filterEmployee(1);
     }
   }
 };

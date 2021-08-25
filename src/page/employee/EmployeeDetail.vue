@@ -20,7 +20,7 @@
             <div class="text">(Vui lòng chọn ảnh có định dạng .jpg. .jpeg. .png. .gif.)</div>
           </div>
           <div class="info-employee">
-            <div class="form-info">
+            <div class="form-info" ref="form-infor">
               <div class="infomation-title">
                 <span class="text">A. Thông tin chung:</span>
               </div>
@@ -350,7 +350,7 @@ export default {
      * Created by duylv 26/07/2021
      */
     validateInput(e) {
-      if (e.value == "") {
+      if (e.value == "" && e.getAttribute("required")) {
         e.parentNode.setAttribute(
           "data-content",
           "Trường này không được để trống"
@@ -412,7 +412,9 @@ export default {
       let check = false;
       let checkInput = true;
       let inputError = [];
-      let input = document.querySelectorAll("input[required='required']");
+      let input = this.$refs["form-infor"].querySelectorAll(
+        "input[required='required']"
+      );
       input.forEach(e => {
         check = this.validateInput(e);
         if (!check) {

@@ -29,7 +29,7 @@
               <span class="checkmark"></span>
             </div>
           </td>
-          <td class="text-center">{{index}}</td>
+          <td class="text-center">{{index +1}}</td>
           <td
             v-for="(item, index) in rowsTable(row)"
             :key="index"
