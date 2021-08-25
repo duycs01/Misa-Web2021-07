@@ -1,0 +1,91 @@
+.combo-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.combo-box .select {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  position: relative;
+}
+.combo-box .select .text {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #bbbbbb;
+  font-weight: normal;
+  color: #000000;
+  padding-left: 16px;
+  padding-right: 40px;
+  border-radius: 4px;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer */
+  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+}
+.combo-box .select .text:focus {
+  border-color: #019160;
+}
+.combo-box .select .text:focus + .icon,
+.combo-box .select .icon:focus,
+.combo-box .select .icon:hover {
+  background: #e5e5e5;
+}
+.combo-box .select .icon {
+  background: #fff;
+  border: none;
+  border-left: 1px solid #bbbbbb;
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  margin-right: 1px;
+  font-size: 13px;
+  border-radius: 0 4px 4px 0;
+  z-index: 10;
+  box-sizing: border-box;
+  transition: 0.3s all ease;
+}
+.combo-box .select .icon i {
+  transition: 0.3s all ease;
+}
+.combo-box .select:focus * .options {
+}
+.combo-box .options {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  padding: 4px 0;
+  z-index: 50;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.combo-box .option-item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  outline: none;
+}
+.combo-box .option-item .icon {
+  padding: 0 10px;
+  color: transparent;
+}
+.combo-box .option-item:hover {
+  background: #e9ebee;
+}
+.combo-box .option-item:active,
+.combo-box .option-item:focus {
+  background: #019160;
+  color: #fff;
+}
+.combo-box .option-item:active .icon,
+.combo-box .option-item:focus .icon {
+  color: #fff;
+}

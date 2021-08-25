@@ -8,12 +8,14 @@
   flex-direction: column;
   height: calc(100% - 50px);
   transition: 0.5s all ease;
+  background: #e9ebee;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 .content .title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 12px;
 }
 .content .title .name-table {
   margin-top: 20px;
@@ -24,7 +26,7 @@
 .content .control {
   display: flex;
   align-items: center;
-  margin: 0 10px 12px;
+  margin-bottom: 16px;
   column-gap: 12px;
 }
 .content .control .search {
@@ -39,9 +41,9 @@
   margin-left: auto;
   background: #fff;
   border: 1px solid #ccc;
+  width: 50px !important;
 }
-.content .btn-refresh:hover,
-.content .btn-refresh:focus {
+.content .btn-refresh:hover{
   background: #e9ebee;
 }
 .menu-toggle + .content {

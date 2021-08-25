@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="header-left">
-      <div class="toggle" id="toggle">
+      <div class="toggle" id="toggle" >
         <img src="../../assets/img/toggle.png" alt="toggle" />
       </div>
       <div class="logo">

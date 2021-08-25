@@ -1,13 +1,27 @@
 <template>
-  <div @blur="open=false" @keyup="nextItem($event)" :tabindex="tabindex" class="dropdown">
-    <div class="select" @click="open = !open" :class="open? 'border-primary':''">
-      <span class="text" :value="selector.value">{{selector.name}}</span>
-      <span :class="open? 'rotate-180':''" class="icon">
-        <i class="fas fa-chevron-down"></i>
+  <div
+    @keyup="nextItem($event)"
+    @blur="open=false"
+    @focus="open = !open"
+    :tabindex="tabindex"
+    class="combo-box"
+  >
+    <div class="select">
+      <input
+        type="text"
+        class="text"
+        @blur="open=false"
+        @focus="open = !open"
+        :class="open? 'border-primary':''"
+        :data-value="selector.value"
+        v-model="selector.name"
+      />
+      <span class="icon" :class="open? 'bg-gray-4':''">
+        <i :class="open? 'rotate-180':''" class="fas fa-chevron-down"></i>
       </span>
     </div>
     <div v-show="open" class="options" :class="classUp">
-      <a
+      <div
         v-for="(item) in options"
         :key="item[select.value]"
         class="option-item"
@@ -19,7 +33,7 @@
           <i class="fas fa-check"></i>
         </span>
         <span class="text">{{item[select.name]}}</span>
-      </a>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +58,7 @@ export default {
     tabindex: {
       type: String
     },
-    classUp:{
+    classUp: {
       type: String
     }
   },
@@ -61,7 +75,6 @@ export default {
   methods: {
     /**
      * sự kiện click option item
-     * CreatedBy: duylv - 21/07/2021
      */
     selected(value) {
       if (this.options && this.select) {
@@ -80,11 +93,6 @@ export default {
         this.open = false;
       }
     },
-
-    /**
-     * sự kiện nút lên xuống option item
-     * CreatedBy: duylv - 21/07/2021
-     */
     nextItem(e) {
       if (e.keyCode == 38) {
         console.log("arow up", this.selector);
@@ -106,5 +114,5 @@ export default {
 };
 </script>
 <style scoped>
-@import url("../../assets/css/base/Dropdown.css");
+@import url("../../assets/css/base/Combobox.css");
 </style>

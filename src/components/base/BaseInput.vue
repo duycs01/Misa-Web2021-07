@@ -4,20 +4,20 @@
       {{ label }}
       <span v-if="required" class="required">
         (
-        <i>*</i>)
+        <span class="text-red">*</span>)
       </span>
     </label>
     <div class="input-group">
       <input
+        ref="inputFocus"
         :tabindex="tabindex"
         :id="id"
         class="input"
         :class="[
-                 {'pl-12': iconLeft === true},
-                 {'pr-12': iconRight === true},
-                 classes,
-
-                ]"
+      {'pl-12': iconLeft === true},
+      {'pr-16': iconRight === true},
+      classes,
+      ]"
         :type="type"
         v-model="inputValue"
         :placeholder="placeholder"
@@ -76,14 +76,26 @@ export default {
     };
   },
   methods: {
-    focus() {
-      this.$refs.input.focus();
+    /**
+     * Xử lí sự kiện focus input
+     * CreatedBy: duylv - 21/07/2021
+     */
+    focusMe() {
+      this.$nextTick(() => {
+        this.$refs.inputFocus.focus();
+      });
     },
+    /**
+     * Xử lí sự kiện select input
+     * CreatedBy: duylv - 21/07/2021
+     */
     select() {
       this.$refs.input.select();
-    },
-    setSelectionRange(start, end) {
-      this.$refs.input.setSelectionRange(start, end);
+    }
+  },
+  watch: {
+    value() {
+      this.inputValue = this.value;
     }
   }
 };

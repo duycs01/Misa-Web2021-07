@@ -1,20 +1,20 @@
 class StatusCode {
     constructor() {
     }
-    checkStatus(status) {
-        switch (status) {
+    checkStatus(res) {
+        switch (res.status) {
             case 200:
-                return { mess: "OK", status: "success" };
+                return { mess: "Thành công", status: "success" };
             case 201:
-                return { mess: "Created", status: "success" };
+                return { mess: "Tạo mới thành công", status: "success" };
             case 204:
-                return { mess: "No Content", status: "success" };
+                return { mess: "Không có dữ liệu", status: "success" };
             case 400:
-                return { mess: "Bad Request", status: "error" };
+                return { mess: res.Messager, status: "error" };
             case 404:
-                return { mess: "Not Found", status: "error" };
+                return { mess: "Không tìm thấy máy chủ", status: "error" };
             case 500:
-                return { mess: "Internal Server Error", status: "error" };
+                return { mess: "Sảy ra lỗi từ máy chủ", status: "error" };
             default:
                 break;
         }

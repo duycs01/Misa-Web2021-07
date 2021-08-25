@@ -3,37 +3,37 @@
     <!-- <a v-for="menuItem in menu" :key="menuItem.text" href="#" class="menu-item">
       <span class="icon" v-html="menuItem.icon"> </span>
       <span class="text" v-text="menuItem.text"></span>
-    </a> -->
-    <a href="#" class="menu-item">
+    </a>-->
+    <router-link to="customer" class="menu-item">
       <span class="icon">
         <img src="../../assets/icon/dashboard.png" alt="dashboard" />
       </span>
       <span class="text">Mua hàng</span>
-    </a>
-    <a href="#" class="menu-item">
+    </router-link>
+    <router-link to="customer" class="menu-item">
       <span class="icon">
         <img src="../../assets/icon/dashboard.png" alt="dashboard" />
       </span>
-      <span class="text">Mua hàng</span>
-    </a>
-    <a href="#" class="menu-item">
+      <span class="text">Danh sách khách hàng</span>
+    </router-link>
+    <router-link to="employee" class="menu-item">
       <span class="icon">
         <img src="../../assets/icon/report.png" alt="report" />
       </span>
       <span class="text">Báo cáo</span>
-    </a>
+    </router-link>
     <a href="#" class="menu-item">
       <span class="icon">
         <img src="../../assets/icon/dashboard.png" alt="dashboard" />
       </span>
       <span class="text">Mua hàng</span>
     </a>
-    <a href="#" class="menu-item">
+    <router-link to="employee" class="menu-item">
       <span class="icon">
         <img src="../../assets/icon/dic-employee.png" alt="employee" />
       </span>
       <span class="text">Danh sách nhân viên</span>
-    </a>
+    </router-link>
     <a href="#" class="menu-item">
       <span class="icon">
         <img src="../../assets/icon/setting.png" alt="setting" />
@@ -49,27 +49,27 @@ export default {
       menu: [
         {
           text: "Tổng quan",
-          icon: `<img src="../../assets/icon/dashboard.png" alt="dashboard" />`,
+          icon: `<img src="../../assets/icon/dashboard.png" alt="dashboard" />`
         },
         {
           text: "Báo cáo",
-          icon: `<img src="../../assets/icon/report.png" alt="report" />`,
+          icon: `<img src="../../assets/icon/report.png" alt="report" />`
         },
         {
           text: "Mua hàng",
-          icon: `<img src="../../assets/icon/dashboard.png" alt="dashboard" />`,
+          icon: `<img src="../../assets/icon/dashboard.png" alt="dashboard" />`
         },
         {
           text: "Danh sách nhân viên",
-          icon: `<img src="../../assets/icon/dic-employee.png" alt="employee" />`,
+          icon: `<img src="../../assets/icon/dic-employee.png" alt="employee" />`
         },
         {
           text: "Thiết lập hệ thống",
-          icon: `<img src="../../assets/icon/setting.png" alt="setting" />`,
-        },
-      ],
+          icon: `<img src="../../assets/icon/setting.png" alt="setting" />`
+        }
+      ]
     };
-  },
+  }
 };
 </script>
 <style scoped>

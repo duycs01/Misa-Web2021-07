@@ -10,10 +10,12 @@
 }
 .popup .body-popup {
   position: relative;
-  margin: 100px auto 0;
+  top: 50%;
+  left: 50%;
   border-radius: 4px;
   width: 30%;
   background: #fff;
+  transform: translate(-50%,-50%);
 }
 .popup .body-popup .title-popup {
   font-size: 15px;
@@ -30,12 +32,13 @@
 }
 .popup .body-popup .content-popup .icon {
   border-radius: 100%;
-  font-size: 16px;
+  font-size: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 8px;
   background: #e9ebee;
+  color: #f65454;
 }
 
 .popup .body-popup .content-popup .text {

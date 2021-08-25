@@ -7,7 +7,7 @@
   outline: none;
 }
 .dropdown .select {
-  border: 1px solid #dbdeff;
+  border: 1px solid #bbbbbb;
   border-radius: 4px;
   height: 40px;
   font-weight: normal;
@@ -40,6 +40,7 @@
   background: #fff;
   padding: 4px 0;
   z-index: 20;
+  max-height: 150px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .dropdown .option-item {

@@ -39,4 +39,11 @@ export default class BaseAPI {
     deleteDataById(id) {
         return baseAPIConfig.delete(`${this.controller}/${id}`)
     }
+
+    /**
+    * Hàm xóa danh sách dữ liệu
+    */
+    deleteListId(body) {
+        return baseAPIConfig.post(`${this.controller}/deleteList`, body)
+    }
 }

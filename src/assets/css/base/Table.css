@@ -1,19 +1,25 @@
 .table {
-  max-height: 420px;
-  overflow-y: scroll;
+  height: 410px;
+  overflow: auto;
   position: relative;
+  background: #fff;
 }
 table {
-  border-collapse: collapse;
-  width: calc(100% - 16px);
+  border-collapse: separate;
+  width: 100%;
   box-sizing: border-box;
-  margin: 0 8px;
+  border-radius: 4px 4px 0 0;
+  border-spacing: 0;
+}
+tr {
+  border-bottom: 1px solid #bbb;
 }
 th {
   position: sticky;
   top: 0;
   background: #fff;
   z-index: 5;
+  text-align: left;
 }
 tr:hover {
   background-color: #e5e5e5;
@@ -22,20 +28,21 @@ tr:active,
 tr:focus {
   background-color: #ebf4ff;
 }
-th {
-  text-align: left;
-}
 td,
 th {
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
+  box-sizing: content-box;
+  height: 48px;
+  padding: 0 10px;
   width: 1px;
   white-space: nowrap;
+  border-bottom: 1px solid #bbb;
+  cursor: pointer;
+  color: #454545;
 }
 /* width / height */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
 }
 
 /* Track */
@@ -47,9 +54,13 @@ th {
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 5px;
+  min-height: 40px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+.table::-webkit-scrollbar-track-piece {
+  margin-top: 50px;
 }

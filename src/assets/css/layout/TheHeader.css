@@ -5,7 +5,7 @@
 .header .header-left {
   width: 225px;
   height: 48px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #bbb;
   display: flex;
   align-items: center;
 }
@@ -35,13 +35,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: calc(100% - 225px);
+  width: calc(100% - 225px);  
 }
 .header-right .bank {
+  margin-left: 16px;
   width: 230px;
 }
-.header-right .bank .dropdown .select {
-  border: none;
+.header-right .bank .dropdown .select,
+.header-right .bank .dropdown .select:hover,
+.header-right .bank .dropdown .select:active {
+  border: none !important;
 }
 .header-right .bank .dropdown .select .icon {
   margin: 0;

@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class>
     <div class="title">
       <div class="name-table">Danh sách nhân viên</div>
       <div class="flex gap-4">
@@ -8,8 +8,8 @@
           :text="'Xóa nhân viên'"
           :iconLeft="true"
           class="bg-red"
-          @click.native="openPopupDelete = true"
-          v-if="listDeleteId.length"
+          @click.native="openPopup()"
+          v-if="listDelete.length"
         >
           <i class="fas fa-trash-alt"></i>
         </base-button>
@@ -17,7 +17,7 @@
           :id="`btn-add`"
           :text="'Thêm nhân viên'"
           :iconLeft="true"
-          @click.native="openDetail()"
+          @click.native="openNewDetail()"
         >
           <img src="../../assets/icon/add.png" alt="add" />
         </base-button>
@@ -29,73 +29,111 @@
         :id="`txtSeach`"
         :placeholder="`Tìm kiếm theo mã, tên hoặc số điện thoại`"
         style="width:320px;"
+        @input="search = $event"
       >
         <template v-slot:icon>
           <img src="../../assets/icon/search.png" alt="search" />
         </template>
       </base-input>
       <div class="filter-department">
-        <BaseDropdown
+        <BaseCombobox
           v-if="departments.data.length"
           :tabindex="`20`"
           :select="departments.select"
           :options="departments.data"
           :optionDefault="departments.optionDefault"
-        ></BaseDropdown>
+          @selected="departmentSelected = $event"
+        ></BaseCombobox>
       </div>
       <div class="filter-employeePositon">
-        <BaseDropdown
+        <BaseCombobox
           v-if="positions.data.length"
           :tabindex="`21`"
           :select="positions.select"
           :options="positions.data"
           :optionDefault="positions.optionDefault"
-        ></BaseDropdown>
+          @selected="positionSelected = $event"
+        ></BaseCombobox>
       </div>
       <base-button
         :id="`btn-refresh`"
         :iconLeft="true"
         class="btn-refresh"
-        @click="getAllDataEmployee"
+        @click.native="getAllDataEmployee"
       >
         <img src="../../assets/icon/refresh.png" alt="refresh" />
       </base-button>
     </div>
     <base-table
-      v-if="employees.data.length"
       :tableId="employees.tableId"
       :headTable="employees.headTable"
       :dataTable="employees.data"
+      :listCheck="listDelete"
       @clickRow="clickRowOpenDetail"
-      @checked="rowChecked"
+      @checked="getListDelete"
     />
-    <Pagination />
+    <Pagination
+      :total-pages="totalPages"
+      :total="totalData"
+      :current-page="currentPage"
+      @pagechanged="onPageChange"
+    >
+      <template v-slot:total>
+        <div class="total text-gray-1">
+          Hiển thị
+          <strong class="text-black">
+            {{pageSize *(currentPage - 1) + 1}} - {{pageSize * currentPage >totalData?
+            totalData:pageSize * currentPage }}/{{totalData}}
+          </strong> nhân viên
+        </div>
+      </template>
+      <template v-slot:pageSize>
+        <div class="dx-fieldset">
+          <div class="dx-field">
+            <div class="dx-field-value">
+              <DxSelectBox
+                :data-source="simpleProducts"
+                @value-changed="pageSizeChange"
+                display-expr="name"
+                :value="pageSize"
+                value-expr="value"
+                drop-down-button-template="imageIcon"
+              >
+                <template #imageIcon="{}">
+                  <i class="fas fa-sort"></i>
+                </template>
+              </DxSelectBox>
+            </div>
+          </div>
+        </div>
+      </template>
+    </Pagination>
     <EmployeeDetail
-      v-if="open==true"
+      v-if="openFormDetail==true"
       :formData="formData"
       @closeDetail="closeDetail"
-      @saveDetail="saveEmployee"
+      @saveFormDetail="saveEmployee"
     />
-    <BasePopup
-      v-if="openPopupDelete"
-      @closePopup="openPopupDelete=false"
-      :title="`Xóa nhân viên`"
-      :description="`Bạn có muốn xóa nhân viên này không`"
-    >
+    <BasePopup v-if="openPopupDelete" @closePopup="openPopupDelete=false" :warning="detailPopup">
       <template v-slot:buttonA>
         <base-button
           :id="`btn-cancelPopup`"
           :text="'Hủy'"
-          class="bg-gray-2"
+          class="bg-gray-4 text-black"
           @click.native="openPopupDelete=false"
         ></base-button>
       </template>
       <template v-slot:buttonB>
-        <base-button :id="`btn-delete`" :text="'Xóa'" class="bg-red" @click.native="deleteEmployee"></base-button>
+        <base-button
+          :id="`btn-delete`"
+          :text="'Xóa'"
+          class="bg-red"
+          @click.native="deleteListEmployee"
+        ></base-button>
       </template>
     </BasePopup>
     <BaseToastMess
-      v-if="toastMess.open"
+      v-if="openToast"
       :status="toastMess.status"
       :message="toastMess.mess"
       @closeToast="openToast = false"
@@ -115,6 +153,9 @@ import BasePopup from "../../components/base/BasePopupWarning.vue";
 import modalEmployee from "../../model/ModelEmployee";
 import BaseToastMess from "../../components/base/BaseToastMess.vue";
 import BaseLoading from "../../components/base/BaseLoading.vue";
+import BaseCombobox from "../../components/base/BaseCombobox.vue";
+
+import { DxSelectBox } from "devextreme-vue/select-box";
 
 export default {
   components: {
@@ -124,10 +165,12 @@ export default {
     BaseTable,
     BasePopup,
     BaseToastMess,
-    BaseLoading
+    BaseLoading,
+    BaseCombobox,
+    DxSelectBox
   },
   mounted() {
-    this.getAllDataEmployee();
+    this.filterEmployee();
     this.getAllDataPosition();
     this.getAllDataDepartment();
   },
@@ -152,7 +195,7 @@ export default {
           {
             name: "Giới tính",
             value: "Gender",
-            className: "text-center",
+            className: "text-left",
             format: "formatGender"
           },
           {
@@ -200,6 +243,7 @@ export default {
           }
         ]
       },
+
       departments: {
         data: [],
         select: {
@@ -208,9 +252,10 @@ export default {
         },
         optionDefault: {
           DepartmentName: "Tất cả phòng ban",
-          DepartmentId: "0"
+          DepartmentId: ""
         }
       },
+
       positions: {
         data: [],
         select: {
@@ -219,219 +264,308 @@ export default {
         },
         optionDefault: {
           PositionName: "Tất cả vị trí",
-          PositionId: "0"
+          PositionId: ""
         }
       },
-      open: false,
+
+      openFormDetail: false,
       openPopupDelete: false,
-      listDeleteId: [],
+
+      listDelete: [],
       formData: modalEmployee,
       formMode: 0,
+
       openToast: false,
+
       toastMess: {
-        mess: "",
-        status: ""
+        mess: "Lấy dữ liệu thành công",
+        status: "success"
       },
-      loading: false
+
+      detailPopup: {
+        title: "",
+        description: ""
+      },
+      positionSelected: "",
+      departmentSelected: "",
+
+      loading: false,
+
+      currentPage: 1,
+      pageSize: 10,
+      simpleProducts: [
+        {
+          name: "10 nhân viên/trang",
+          value: 10
+        },
+        {
+          name: "20 nhân viên/trang",
+          value: 20
+        },
+        {
+          name: "30 nhân viên/trang",
+          value: 30
+        },
+        {
+          name: "40 nhân viên/trang",
+          value: 40
+        },
+        {
+          name: "50 nhân viên/trang",
+          value: 50
+        }
+      ],
+      selectedItem: {
+        name: "10 nhân viên/trang",
+        value: 10
+      },
+      totalPages: 1,
+      totalData: 0,
+      search: ""
     };
   },
   methods: {
     /**
-     * Gọi api tất cả nhân viên
+     * Gán dữ liệu pageSize khi chọn dropdown
+     * Created by duylv - 20/8/2021
      */
-    getAllDataEmployee() {
-      let me = this;
-      this.loading = true;
-      try {
-        EmployeesAPI.getAllData()
-          .then(res => {
-            me.employees.data = res.data;
-            this.showHideToastMess(res.status);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
+    pageSizeChange(e) {
+      this.pageSize = e.value;
+    },
+
+    /**
+     * Sự kiện chuyển page
+     * Created by duylv 08/08/2021
+     */
+    onPageChange(page) {
+      this.filterEmployee(page);
+    },
+
+    /**
+     * Phân trang và lọc dữ liệu
+     * Created by duylv - 22/8/2021
+     */
+    filterEmployee(page) {
+      if (page) {
+        this.currentPage = page;
       }
+      this.loading = true;
+      var filters = `GetEmployeePaging?filterName=${this.search}&departmentId=${this.departmentSelected}&positionId=${this.positionSelected}&pageSize=${this.pageSize}&pageIndex=${this.currentPage}`;
+      let me = this;
+      EmployeesAPI.getDataById(filters)
+        .then(res => {
+          me.employees.data = res.data.Data;
+          me.totalPages = res.data.TotalPage;
+          me.totalData = res.data.TotalRecord;
+
+          if (res) this.loading = false;
+        })
+        .catch(error => {
+          if (error) this.loading = false;
+
+          this.toastMess = this.$statusCode.checkStatus(error.response);
+          this.showToastMess();
+        });
     },
 
     /**
      * Gọi api lấy tất cả phòng ban
+     * Created by duylv 26/07/2021
      */
     getAllDataPosition() {
       let me = this;
-      try {
-        PositionsAPI.getAllData()
-          .then(res => {
-            me.positions.data = res.data;
-            me.positions.data.push(me.positions.optionDefault);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+      PositionsAPI.getAllData()
+        .then(res => {
+          me.positions.data = res.data;
+          me.positions.data.push(me.positions.optionDefault);
+        })
+        .catch(error => {
+          this.toastMess = this.$statusCode.checkStatus(error.response);
+          this.showToastMess();
+        });
     },
 
     /**
      * Gọi api lấy tất cả phòng ban
+     * Created by duylv 26/07/2021
      */
     getAllDataDepartment() {
       let me = this;
-      try {
-        DepartmentsAPI.getAllData()
-          .then(res => {
-            me.departments.data = res.data;
-            me.departments.data.push(me.departments.optionDefault);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+      DepartmentsAPI.getAllData()
+        .then(res => {
+          me.departments.data = res.data;
+          me.departments.data.push(me.departments.optionDefault);
+        })
+        .catch(error => {
+          this.toastMess = this.$statusCode.checkStatus(error.response);
+          this.showToastMess();
+        });
     },
 
+    /**
+     * Lấy mã nhân viên mới
+     * Created by duylv 22/08/2021
+     */
     getNewEmployeeCode() {
       var id = "NewEmployeeCode";
       EmployeesAPI.getDataById(id)
         .then(res => {
           this.formData.EmployeeCode = res.data;
-          this.showHideToastMess(res);
         })
-        .catch(err => {
-          console.log(err, "Đã có lỗi sảy ra");
+        .catch(error => {
+          this.toastMess = this.$statusCode.checkStatus(error.response);
+          this.showToastMess();
         });
     },
 
     /**
-     * hàm ẩn hiện toast mess
+     *  Hàm sử lí mở poppup detail
+     * Created by duylv 28/07/2021
+     *  */
+    openNewDetail() {
+      this.formData = {};
+      this.formMode = 0;
+      this.getNewEmployeeCode();
+      this.openFormDetail = true;
+    },
+
+    /**
+     * Đóng form employee
+     * Created by duylv 28/07/2021
      */
-    showHideToastMess(res) {
+    closeDetail() {
+      this.openFormDetail = false;
+    },
+
+    /**
+     * dblClick row để mở detail
+     * Created by duylv 28/07/2021
+     */
+    clickRowOpenDetail(row) {
+      let me = this;
+      // Lấy dữ liệu bằng api
+      EmployeesAPI.getDataById(row.EmployeeId)
+        .then(res => {
+          this.formData = res.data;
+          me.openFormDetail = true;
+          me.formMode = 1;
+        })
+        .catch(error => {
+          this.toastMess = this.$statusCode.checkStatus(error.response);
+          this.showToastMess();
+        });
+    },
+
+    /**
+     * Mở popup delete
+     * Created by duylv 28/07/2021
+     */
+    openPopup() {
+      this.openPopupDelete = true;
+      if (this.listDelete.length > 0 && this.listDelete.length > 1) {
+        this.detailPopup.title = "Xóa nhân viên";
+        this.detailPopup.description = `Bạn có muốn xóa các nhân viên ra khỏi danh sách không`;
+      } else {
+        this.detailPopup.title = "Xóa nhân viên";
+        this.detailPopup.description = `Bạn có muốn xóa nhân viên ${this.listDelete[0].EmployeeCode} ra khỏi danh sách không`;
+      }
+    },
+
+    /**
+     * Gán danh sách xóa khi check vào hàng
+     * Created by duylv 29/07/2021
+     */
+    getListDelete(listCheckDelete) {
+      this.listDelete = listCheckDelete;
+    },
+
+    /**
+     * Xóa danh sách dữ liệu theo id
+     * Created by duylv - 28/07/2021
+     */
+    deleteListEmployee() {
+      if (this.listDelete.length > 0)
+        EmployeesAPI.deleteListId(this.listDelete)
+          .then(res => {
+            this.toastMess = this.$statusCode.checkStatus(res);
+
+            this.filterEmployee(this.currentPage);
+
+            this.showToastMess();
+
+            this.openPopupDelete = false;
+            this.listDelete = [];
+          })
+          .catch(error => {
+            this.toastMess = this.$statusCode.checkStatus(error.response);
+            this.showToastMess();
+          });
+    },
+
+    /**
+     * Ẩn hiện thông báo
+     * Created by duylv - 28/07/2021
+     */
+    showToastMess() {
       this.openToast = true;
-      this.toastMess.mess = this.$statusCode.checkStatus(res);
       setTimeout(() => {
         this.openToast = false;
       }, 5000);
     },
 
-    // Hàm sử lí mở poppup detail
-    openDetail() {
-      this.open = true;
-      this.formData = {};
-      this.getNewEmployeeCode();
-      this.formMode = 0;
-    },
-
-    closeDetail() {
-      this.open = false;
-    },
-
-    clickRowOpenDetail(row) {
-      let me = this;
-      console.log("row", row); // lấy được row mà k cần call api
-      // Lấy dữ liệu bằng api
-      EmployeesAPI.getDataById(row.EmployeeId)
-        .then(res => {
-          this.formData = res.data;
-          me.open = true;
-          me.formMode = 1;
-        })
-        .catch(err => {
-          console.log(err, "Đã có lỗi sảy ra");
-        });
-    },
-
-    // khi checked thì lấy id
-    rowChecked({ e, id }) {
-      if (e.target.checked) {
-        this.listDeleteId.push(id);
-      } else {
-        const index = this.listDeleteId.indexOf(id);
-        if (index > -1) {
-          this.listDeleteId.splice(index, 1);
-        }
-      }
-    },
-
-    /**
-     * Xóa Nhân viên
-     */
-    deleteEmployee() {
-      var me = this;
-      if (me.listDeleteId.length > 0) {
-        Promise.all(
-          me.listDeleteId.map(item => EmployeesAPI.deleteDataById(item))
-        )
-          .then(res => {
-            this.showHideToastMess(res[0]);
-          })
-          .catch(err => {
-            console.log("Đã có lỗi sảy ra", err);
-          })
-          .finally(() => {
-            me.openPopupDelete = false;
-            this.getAllDataEmployee();
-            this.loading = true;
-
-            let checked = document.querySelectorAll(
-              "input[type='checkbox']:checked"
-            );
-            for (let i in checked) {
-              if (checked[i].checked) checked[i].checked = false;
-            }
-            me.listDeleteId = [];
-          });
-      }
-    },
-
     /**
      * Thêm,Sửa Nhân viên
+     * Created by duylv - 28/07/2021
      */
     saveEmployee(data) {
       if (this.formMode == 0) {
-        console.log(data);
-        try {
-          EmployeesAPI.insertData(data)
-            .then(res => {
-              if (res) {
-                this.loading = true;
-                this.getAllDataEmployee();
-                this.showHideToastMess(res.status);
-              }
-            })
-            .catch(err => console.log(err));
-        } catch (error) {
-          console.log(error);
-        }
+        EmployeesAPI.insertData(data)
+          .then(res => {
+            this.filterEmployee(this.currentPage);
+            this.toastMess = this.$statusCode.checkStatus(res);
+            this.showToastMess();
+          })
+          .catch(error => {
+            this.toastMess = this.$statusCode.checkStatus(error.response);
+            this.showToastMess();
+          });
       }
       if (this.formMode == 1) {
         let id = data.EmployeeId;
-        try {
-          EmployeesAPI.updateDataById(id, data)
-            .then(res => {
-              if (res) {
-                console.log(res);
-                this.loading = true;
-                this.getAllDataEmployee();
-                this.showHideToastMess(res.status);
-              }
-            })
-            .catch(err => console.log(err));
-        } catch (error) {
-          console.log(error);
-        }
+        EmployeesAPI.updateDataById(id, data)
+          .then(res => {
+            this.filterEmployee(this.currentPage);
+            this.toastMess = this.$statusCode.checkStatus(res);
+            this.showToastMess();
+            this.closeDetail();
+          })
+          .catch(error => {
+            this.toastMess = this.$statusCode.checkStatus(error.response);
+            this.showToastMess();
+          });
       }
     }
   },
   watch: {
-    employees: {
-      deep: true,
-      handler() {
-        this.loading = false;
-      }
+    /**
+     * Theo dõi biến position khi thay đổi
+     */
+    positionSelected() {
+      this.filterEmployee();
+    },
+
+    /**
+     * Theo dõi biến department khi thay đổi
+     */
+    departmentSelected() {
+      this.filterEmployee();
+    },
+
+    /**
+     * Theo dõi biến khi pageSize  khi thay đổi
+     */
+    pageSize() {
+      this.filterEmployee();
     }
   }
 };

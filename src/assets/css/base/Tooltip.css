@@ -3,32 +3,35 @@
 }
 .tooltip:after {
   position: absolute;
-  background: #f65454;
+  background: #ff4747;
   border-radius: 4px;
   color: #fff;
   padding: 10px;
   width: 150px;
-  left: 20%;
-  bottom: 50px;
+  left: 50%;
+  bottom: 42px;
   text-align: center;
   opacity: 90%;
   z-index: 20;
+  transform: translateX(-50%);
 }
 .tooltip:before {
   border: solid;
-  border-color: #f65454 transparent;
+  border-color: #ff4747 transparent;
   border-width: 10px 6px 0 6px;
   content: "";
-  left: 55%;
-  top: -10px;
+  left: 50%;
+  top: -2px;
   position: absolute;
   opacity: 90%;
   z-index: 20;
+  transform: translateX(-50%);
 }
 .tooltip:after {
+  font-style: normal;
   content: attr(data-content);
 }
 
 .border-corlor-red {
-  border-color: #f65454 !important;
+  border-color: #ff4747 !important;
 }

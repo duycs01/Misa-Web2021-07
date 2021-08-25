@@ -87,51 +87,18 @@ class Common {
     }
 
 
-    /**
-     * Kiểm tra input và hiện tooltip
-     */
-    validateInput(e) {
-        if (e.value == "") {
-            e.parentNode.setAttribute(
-                "data-content",
-                "Trường này không được để trống"
-            );
-            Common.showHideTooltip(e, false)
-            return false
-        }
-        else if (e.id == "txtEmail") {
-            let testEmail = Common.validateEmail(e);
-            e.parentNode.setAttribute(
-                "data-content",
-                "Email không đúng định dạng"
-            );
-            return Common.showHideTooltip(e, testEmail)
-        }
-        else if (e.id == "txtPhoneNumber") {
-            let testPhoneNumber = Common.validatePhone(e);
-            e.parentNode.setAttribute(
-                "data-content",
-                "Số điện thoại không đúng định dạng"
-            );
-            return Common.showHideTooltip(e, testPhoneNumber)
-        }
-        else {
-            return Common.showHideTooltip(e, true)
-        }
-
-    }
-
+  
     /**
      * Hàm ẩn hiện tooltip
      */
-    static showHideTooltip(input, check) {
+    showHideTooltip(input, check) {
         if (!check) {
             input.classList.add("border-corlor-red");
             input.parentNode.classList.add("tooltip");
             return false;
         } else {
-            input.classList.remove("tooltip");
-            input.parentNode.classList.remove("border-corlor-red");
+            input.classList.remove("border-corlor-red");
+            input.parentNode.classList.remove("tooltip");
             return true;
         }
 
@@ -140,7 +107,7 @@ class Common {
     /**
      * Hàm kiểm tra định dạng email
      */
-    static validateEmail(inputEmail) {
+    validateEmail(inputEmail) {
         let re =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (inputEmail.value) return re.test(String(inputEmail.value).toLowerCase());
@@ -148,10 +115,36 @@ class Common {
     /**
      * Hàm kiểm tra định dạng PhoneNumber
     */
-    static validatePhone(inputPhone) {
-        let phoneno = /^\d{10}$/;
-        if (inputPhone.value) return inputPhone.value.match(phoneno)
+    validateNumber(inputNumber) {
+        let phoneno = /^[0-9]+$/;
+        if (inputNumber.value) return inputNumber.value.match(phoneno)
     }
+
+    /**
+     * Kiểm tra định dạng text
+     */
+    validateString(inputString) {
+        var regex = /^[a-zA-Z ]{2,30}$/;
+        return regex.test(inputString.value);
+    }
+
+    /**
+     * Hàm format dữ liệu theo định dạng
+     */
+     formatValue(item) {
+        switch (item.value) {
+          case "DateOfBirth":
+            return this.formatDate(item.name);
+          case "Salary":
+            return this.formatMoney(item.name);
+          case "Gender":
+            return this.formatGenderToName(item.name);
+          case "WorkStatus":
+            return this.formatWorkStatusToName(item.name);
+          default:
+            return item.name;
+        }
+      }
 }
 
 export default new Common()
